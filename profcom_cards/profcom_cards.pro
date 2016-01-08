@@ -18,3 +18,8 @@ SOURCES += main.cpp\
 HEADERS  += profkom.h
 
 FORMS    += profkom.ui
+
+QT += sql
+
+CONFIG += qsqlmysql
+

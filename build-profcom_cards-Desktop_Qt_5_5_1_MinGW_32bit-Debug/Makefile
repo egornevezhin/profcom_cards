@@ -195,6 +195,7 @@ Makefile: ../profcom_cards/profcom_cards.pro C:/QT/5.5/mingw492_32/mkspecs/win32
 		C:/QT/5.5/mingw492_32/lib/qtmaind.prl \
 		C:/QT/5.5/mingw492_32/lib/Qt5Widgets.prl \
 		C:/QT/5.5/mingw492_32/lib/Qt5Gui.prl \
+		C:/QT/5.5/mingw492_32/lib/Qt5Sql.prl \
 		C:/QT/5.5/mingw492_32/lib/Qt5Core.prl
 	$(QMAKE) -spec win32-g++ "CONFIG+=debug" -o Makefile ..\profcom_cards\profcom_cards.pro
 C:/QT/5.5/mingw492_32/mkspecs/features/spec_pre.prf:
@@ -333,6 +334,7 @@ C:/QT/5.5/mingw492_32/mkspecs/features/lex.prf:
 C:/QT/5.5/mingw492_32/lib/qtmaind.prl:
 C:/QT/5.5/mingw492_32/lib/Qt5Widgets.prl:
 C:/QT/5.5/mingw492_32/lib/Qt5Gui.prl:
+C:/QT/5.5/mingw492_32/lib/Qt5Sql.prl:
 C:/QT/5.5/mingw492_32/lib/Qt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec win32-g++ "CONFIG+=debug" -o Makefile ..\profcom_cards\profcom_cards.pro
