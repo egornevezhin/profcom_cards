@@ -23,3 +23,5 @@ QT += sql
 
 CONFIG += qsqlmysql
 
+QT += core
+

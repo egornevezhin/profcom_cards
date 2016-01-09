@@ -2,6 +2,9 @@
 #define PROFKOM_H
 
 #include <QMainWindow>
+#include <QString>
+#include <qimage.h>
+#include <QVector>
 
 namespace Ui {
 class Profkom;
@@ -16,10 +19,11 @@ public:
     ~Profkom();
 
 
+private slots:
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::Profkom *ui;
-
-    int a;
 };
 
 #endif // PROFKOM_H

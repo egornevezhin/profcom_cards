@@ -213,6 +213,7 @@ debug/moc_profkom.cpp: C:/QT/5.5/mingw492_32/include/QtWidgets/QMainWindow \
 		C:/QT/5.5/mingw492_32/include/QtGui/qtouchdevice.h \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/qtabwidget.h \
 		C:/QT/5.5/mingw492_32/include/QtGui/qicon.h \
+		C:/QT/5.5/mingw492_32/include/QtCore/QString \
 		../profcom_cards/profkom.h
 	C:\QT\5.5\mingw492_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/QT/5.5/mingw492_32/mkspecs/win32-g++ -I"C:/Users/Egor Nevezhin/Documents/projects/profcom_cards/profcom_cards" -IC:/QT/5.5/mingw492_32/include -IC:/QT/5.5/mingw492_32/include/QtWidgets -IC:/QT/5.5/mingw492_32/include/QtGui -IC:/QT/5.5/mingw492_32/include/QtANGLE -IC:/QT/5.5/mingw492_32/include/QtSql -IC:/QT/5.5/mingw492_32/include/QtCore -I. ..\profcom_cards\profkom.h -o debug\moc_profkom.cpp
 
@@ -342,6 +343,7 @@ debug/main.o: ../profcom_cards/main.cpp ../profcom_cards/profkom.h \
 		C:/QT/5.5/mingw492_32/include/QtGui/qtouchdevice.h \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/qtabwidget.h \
 		C:/QT/5.5/mingw492_32/include/QtGui/qicon.h \
+		C:/QT/5.5/mingw492_32/include/QtCore/QString \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/QApplication \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/qapplication.h \
 		C:/QT/5.5/mingw492_32/include/QtCore/qcoreapplication.h \
@@ -457,6 +459,7 @@ debug/profkom.o: ../profcom_cards/profkom.cpp ../profcom_cards/profkom.h \
 		C:/QT/5.5/mingw492_32/include/QtGui/qtouchdevice.h \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/qtabwidget.h \
 		C:/QT/5.5/mingw492_32/include/QtGui/qicon.h \
+		C:/QT/5.5/mingw492_32/include/QtCore/QString \
 		ui_profkom.h \
 		C:/QT/5.5/mingw492_32/include/QtCore/QVariant \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/QAction \
@@ -519,7 +522,10 @@ debug/profkom.o: ../profcom_cards/profkom.cpp ../profcom_cards/profkom.h \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/qmessagebox.h \
 		C:/QT/5.5/mingw492_32/include/QtWidgets/qdialog.h \
 		C:/QT/5.5/mingw492_32/include/QtSql/QSqlError \
-		C:/QT/5.5/mingw492_32/include/QtSql/qsqlerror.h
+		C:/QT/5.5/mingw492_32/include/QtSql/qsqlerror.h \
+		C:/QT/5.5/mingw492_32/include/QtSql/QSqlQuery \
+		C:/QT/5.5/mingw492_32/include/QtSql/qsqlquery.h \
+		C:/QT/5.5/mingw492_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\profkom.o ..\profcom_cards\profkom.cpp
 
 debug/moc_profkom.o: debug/moc_profkom.cpp 
