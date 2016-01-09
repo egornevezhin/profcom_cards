@@ -30,6 +30,7 @@ private slots:
 
 private:
     Ui::Profkom *ui;
+    QString isu;
 };
 
 #endif // PROFKOM_H

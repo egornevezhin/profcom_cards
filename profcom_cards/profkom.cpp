@@ -81,20 +81,29 @@ void Profkom::on_pushButton_2_clicked()
 {
     QSqlQuery query;
     QString s;
-    s = ui->Events->currentText();
+    QMessageBox mb;
+    s = isu;
+    query.prepare("UPDATE CHLENS SET DEPOSIT = '1' WHERE ISU = " + s);
+    if(query.exec()){
+         ui->Deposit->setText("Оплачены.");
+    }
+    else{
+        mb.setText(query.lastError().text());
+        mb.exec();
+    }
 }
 
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
     QString s, fio, deposit;
     if(ui->ISU->text().size() == 6){
-        s = ui->ISU->text();
+        isu = arg1;
         QSqlQuery query;
         QMessageBox mb;
 
-        query.prepare("(SELECT FIO FROM CHLENS WHERE ISU = " + s + ") UNION (" +
-                      "SELECT PHOTO FROM PHOTO WHERE ISU = " + s + ") UNION (" +
-                      "SELECT DEPOSIT FROM CHLENS WHERE ISU = " + s + ")");
+        query.prepare("(SELECT FIO FROM CHLENS WHERE ISU = " + isu + ") UNION (" +
+                      "SELECT PHOTO FROM PHOTO WHERE ISU = " + isu + ") UNION (" +
+                      "SELECT DEPOSIT FROM CHLENS WHERE ISU = " + isu + ")");
 
         if(!query.exec()){
             mb.setText(query.lastError().text());
