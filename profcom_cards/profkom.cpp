@@ -11,6 +11,7 @@
 #include <vector>
 
 
+
 void conn(){
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
@@ -65,54 +66,61 @@ void Profkom::on_lineEdit_textChanged(const QString &arg1)
         s = ui->lineEdit->text();
         QSqlQuery query;
         QMessageBox mb;
-        // запрос по фио
-        query.prepare( "SELECT FIO FROM CHLENS WHERE ISU = " + s);
+
+        query.prepare("(SELECT FIO FROM CHLENS WHERE ISU = " + s + ") UNION (" +
+                      "SELECT PHOTO FROM PHOTO WHERE ISU = " + s + ") UNION (" +
+                      "SELECT DEPOSIT FROM CHLENS WHERE ISU = " + s + ")");
+
         if(!query.exec()){
-            mb.setText("No find!");
+            mb.setText(query.lastError().text());
             mb.exec();
         }
         else{
-            query.first();
+            query.first(); // запрос по фио
+
             fio = query.value(0).toString();
             ui->Fio->setText(fio);
-        }
-        // запрос по фото
-        query.prepare( "SELECT PHOTO FROM PHOTO WHERE ISU = " + s);
-        if(!query.exec()){
-            mb.setText("No find!");
-            mb.exec();
-        }
-        else{
-            query.first();
+
+            query.next(); // запрос по фоточке
+
             QByteArray array = query.value(0).toByteArray();
             QBuffer buffer(&array);
             buffer.open( QIODevice::ReadOnly );
-
             QImageReader reader(&buffer, "jpg");
             QImage image = reader.read();
-
             QGraphicsScene *scn = new QGraphicsScene( ui->Photo );
             ui->Photo->setScene( scn );
             QPixmap pix( QPixmap::fromImage(image) );
             scn->addPixmap( pix );
-
             ui->Photo->show();
-        }
-        // запрос по профвзносам
-        query.prepare( "SELECT DEPOSIT FROM CHLENS WHERE ISU = " + s);
-        if(!query.exec()){
-            mb.setText("No find!");
-            mb.exec();
-        }
-        else{
-            query.first();
+
+            query.next(); // запрос по профвзносам
+
             deposit = query.value(0).toString();
             if(deposit == "1")
-                ui->Deposit->setText("оплачены.");
+                ui->Deposit->setText("Оплачены.");
             else
-                ui->Deposit->setText("не оплачены.");
+                ui->Deposit->setText("Не оплачены.");
         }
 
         ui->lineEdit->clear();
+    }
+}
+
+void Profkom::on_pushButton_clicked()
+{
+    QSqlQuery query;
+    QString s;
+    QMessageBox mb;
+    s = ui->Events->currentText();
+    query.exec("SELECT ID FROM EVENTS WHERE NAME = '" + s +"'");
+    query.first();
+    int num = query.value(0).toInt();
+    if(ui->Deposit->text() == "Оплачены.")
+        query.exec("INSERT INTO EVENT_CHLENS (ISU, ID_EVENT) VALUES (192440, " +
+                   QString::number(num) + ");");
+    else{
+        mb.setText("Не оплачены профвзносы");
+        mb.exec();
     }
 }

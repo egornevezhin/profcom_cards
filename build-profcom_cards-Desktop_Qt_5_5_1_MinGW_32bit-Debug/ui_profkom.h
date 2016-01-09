@@ -15,11 +15,13 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBar>
@@ -39,10 +41,13 @@ public:
     QLabel *label_2;
     QLabel *label_3;
     QLabel *Fio;
+    QGroupBox *groupBox;
     QLabel *label_5;
     QComboBox *Events;
-    QLabel *label_4;
+    QPushButton *pushButton;
+    QGroupBox *groupBox_2;
     QLabel *Deposit;
+    QPushButton *pushButton_2;
     QWidget *tab_2;
     QWidget *tab_3;
     QMenuBar *menuBar;
@@ -64,17 +69,17 @@ public:
         tab->setObjectName(QStringLiteral("tab"));
         lineEdit = new QLineEdit(tab);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(10, 30, 111, 21));
+        lineEdit->setGeometry(QRect(400, 30, 111, 21));
         label = new QLabel(tab);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 10, 71, 16));
+        label->setGeometry(QRect(400, 10, 71, 16));
         QFont font;
         font.setBold(true);
         font.setWeight(75);
         label->setFont(font);
         Photo = new QGraphicsView(tab);
         Photo->setObjectName(QStringLiteral("Photo"));
-        Photo->setGeometry(QRect(10, 80, 110, 150));
+        Photo->setGeometry(QRect(10, 30, 110, 150));
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -87,29 +92,37 @@ public:
         Photo->setTransformationAnchor(QGraphicsView::AnchorViewCenter);
         label_2 = new QLabel(tab);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(10, 60, 47, 13));
+        label_2->setGeometry(QRect(10, 10, 47, 13));
         label_2->setFont(font);
         label_3 = new QLabel(tab);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(150, 60, 47, 13));
+        label_3->setGeometry(QRect(140, 10, 47, 13));
         label_3->setFont(font);
         Fio = new QLabel(tab);
         Fio->setObjectName(QStringLiteral("Fio"));
-        Fio->setGeometry(QRect(150, 80, 181, 16));
-        label_5 = new QLabel(tab);
+        Fio->setGeometry(QRect(140, 30, 241, 16));
+        groupBox = new QGroupBox(tab);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        groupBox->setGeometry(QRect(140, 60, 241, 121));
+        label_5 = new QLabel(groupBox);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(150, 103, 221, 20));
+        label_5->setGeometry(QRect(10, 20, 221, 20));
         label_5->setFont(font);
-        Events = new QComboBox(tab);
+        Events = new QComboBox(groupBox);
         Events->setObjectName(QStringLiteral("Events"));
-        Events->setGeometry(QRect(150, 130, 171, 22));
-        label_4 = new QLabel(tab);
-        label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(150, 170, 81, 16));
-        label_4->setFont(font);
-        Deposit = new QLabel(tab);
+        Events->setGeometry(QRect(10, 50, 171, 22));
+        pushButton = new QPushButton(groupBox);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(10, 80, 75, 23));
+        groupBox_2 = new QGroupBox(tab);
+        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
+        groupBox_2->setGeometry(QRect(400, 60, 161, 80));
+        Deposit = new QLabel(groupBox_2);
         Deposit->setObjectName(QStringLiteral("Deposit"));
-        Deposit->setGeometry(QRect(250, 170, 81, 16));
+        Deposit->setGeometry(QRect(10, 20, 131, 16));
+        pushButton_2 = new QPushButton(groupBox_2);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(10, 50, 75, 23));
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
@@ -147,9 +160,12 @@ public:
         label_2->setText(QApplication::translate("Profkom", "\320\244\320\276\321\202\320\276", 0));
         label_3->setText(QApplication::translate("Profkom", "\320\244\320\230\320\236", 0));
         Fio->setText(QString());
+        groupBox->setTitle(QApplication::translate("Profkom", "\320\240\320\265\320\263\320\270\321\201\321\202\321\200\320\260\321\206\320\270\321\217", 0));
         label_5->setText(QApplication::translate("Profkom", "\320\227\320\260\321\200\320\265\320\263\320\270\321\201\321\202\321\200\320\270\321\200\320\276\320\262\320\260\321\202\321\214 \320\275\320\260 \320\274\320\265\321\200\320\276\320\277\321\200\320\270\321\217\321\202\320\270\320\265:", 0));
-        label_4->setText(QApplication::translate("Profkom", "\320\237\321\200\320\276\321\204\320\262\320\267\320\275\320\276\321\201\321\213:", 0));
+        pushButton->setText(QApplication::translate("Profkom", "OK", 0));
+        groupBox_2->setTitle(QApplication::translate("Profkom", "\320\237\321\200\320\276\321\204\320\262\320\267\320\275\320\276\321\201\321\213", 0));
         Deposit->setText(QString());
+        pushButton_2->setText(QApplication::translate("Profkom", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("Profkom", "\320\255\320\272\321\201\320\272\321\203\321\200\321\201\320\270\320\270", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("Profkom", "\320\222\321\201\321\202\321\203\320\277\320\273\320\265\320\275\320\270\320\265", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("Profkom", "\320\234\320\260\321\202\320\265\321\200\320\270\320\260\320\273\321\214\320\275\320\260\321\217 \320\277\320\276\320\274\320\276\321\211\321\214", 0));
