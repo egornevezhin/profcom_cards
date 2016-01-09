@@ -24,6 +24,10 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
+    void on_ISU_textChanged(const QString &arg1);
+
 private:
     Ui::Profkom *ui;
 };

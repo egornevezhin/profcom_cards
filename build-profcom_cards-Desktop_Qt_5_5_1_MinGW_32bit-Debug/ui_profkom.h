@@ -35,7 +35,7 @@ public:
     QWidget *centralWidget;
     QTabWidget *tabWidget;
     QWidget *tab;
-    QLineEdit *lineEdit;
+    QLineEdit *ISU;
     QLabel *label;
     QGraphicsView *Photo;
     QLabel *label_2;
@@ -67,9 +67,9 @@ public:
         tabWidget->setGeometry(QRect(0, 0, 600, 360));
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
-        lineEdit = new QLineEdit(tab);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(400, 30, 111, 21));
+        ISU = new QLineEdit(tab);
+        ISU->setObjectName(QStringLiteral("ISU"));
+        ISU->setGeometry(QRect(400, 30, 111, 21));
         label = new QLabel(tab);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(400, 10, 71, 16));

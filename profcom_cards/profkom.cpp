@@ -58,12 +58,37 @@ Profkom::~Profkom()
     delete ui;
 }
 
-void Profkom::on_lineEdit_textChanged(const QString &arg1)
+void Profkom::on_pushButton_clicked()
 {
-    QImage image;
+    QSqlQuery query;
+    QString s;
+    QMessageBox mb;
+    s = ui->Events->currentText();
+    query.exec("SELECT ID FROM EVENTS WHERE NAME = '" + s +"'");
+    query.first();
+    int num = query.value(0).toInt();
+    if(ui->Deposit->text() == "Оплачены.")
+        query.exec("INSERT INTO EVENT_CHLENS (ISU, ID_EVENT) VALUES (" +
+                   ui->ISU->text() + ", " +
+                   QString::number(num) + ");");
+    else{
+        mb.setText("Не оплачены профвзносы");
+        mb.exec();
+    }
+}
+
+void Profkom::on_pushButton_2_clicked()
+{
+    QSqlQuery query;
+    QString s;
+    s = ui->Events->currentText();
+}
+
+void Profkom::on_ISU_textChanged(const QString &arg1)
+{
     QString s, fio, deposit;
-    if(ui->lineEdit->text().size() == 6){
-        s = ui->lineEdit->text();
+    if(ui->ISU->text().size() == 6){
+        s = ui->ISU->text();
         QSqlQuery query;
         QMessageBox mb;
 
@@ -103,24 +128,6 @@ void Profkom::on_lineEdit_textChanged(const QString &arg1)
                 ui->Deposit->setText("Не оплачены.");
         }
 
-        ui->lineEdit->clear();
-    }
-}
-
-void Profkom::on_pushButton_clicked()
-{
-    QSqlQuery query;
-    QString s;
-    QMessageBox mb;
-    s = ui->Events->currentText();
-    query.exec("SELECT ID FROM EVENTS WHERE NAME = '" + s +"'");
-    query.first();
-    int num = query.value(0).toInt();
-    if(ui->Deposit->text() == "Оплачены.")
-        query.exec("INSERT INTO EVENT_CHLENS (ISU, ID_EVENT) VALUES (192440, " +
-                   QString::number(num) + ");");
-    else{
-        mb.setText("Не оплачены профвзносы");
-        mb.exec();
+        ui->ISU->clear();
     }
 }
