@@ -38,12 +38,27 @@ private slots:
 
     void getImage(QNetworkReply *reply);
 
+    void on_tabWidget_tabBarClicked(int index);
+
+    void on_comboBoxEvents_activated(int index);
+
 private:
     Ui::Profkom *ui;
 
     QMessageBox *MBox;
 
     QString isu;
+
+    struct events{
+      int id;
+      QString name;
+      QDate date;
+      int amount;
+      int rate;
+    };
+
+    QVector<events> eventsVec;
+
 };
 
 #endif // PROFKOM_H

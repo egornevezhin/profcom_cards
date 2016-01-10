@@ -12,3 +12,4 @@ profcom_cards/Makefile.Debug
 *.Release
 profcom_cards/profcom_cards.pro.user
 *.user
+*.user
