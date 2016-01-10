@@ -225,9 +225,37 @@ void Profkom::on_tabWidget_tabBarClicked(int index)
 
 void Profkom::on_comboBoxEvents_activated(int index)
 {
-    index--;
-    ui->eventName->setText(eventsVec[index].name);
-    ui->eventDate->setDate(eventsVec[index].date);
-    ui->eventAmount->setText(QString::number(eventsVec[index].amount));
-    ui->eventRate->setText(QString::number(eventsVec[index].rate));
+    if(index!=0){
+        index--;
+        ui->eventName->setText(eventsVec[index].name);
+        ui->eventDate->setDate(eventsVec[index].date);
+        ui->eventAmount->setText(QString::number(eventsVec[index].amount));
+        ui->eventRate->setText(QString::number(eventsVec[index].rate));
+        ui->buttonDelteEvent->setEnabled(1);
+    }
+    else{
+        ui->eventName->clear();
+        ui->eventDate->setDate(QDate::currentDate());
+        ui->eventAmount->clear();
+        ui->eventRate->clear();
+        ui->buttonDelteEvent->setEnabled(0);
+    }
+}
+
+void Profkom::on_buttonDelteEvent_clicked()
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM events WHERE id = '"+QString::number(eventsVec[ui->comboBoxEvents->currentIndex()-1].id)+"'");
+    if(!query.exec()){
+        ShowMessage(query.lastError().text(),"EROR");
+    }else{
+        ShowMessage("Мероприятие успешно удалено","ОК");
+    }
+
+    on_tabWidget_tabBarClicked(1);
+
+    ui->eventName->clear();
+    ui->eventDate->setDate(QDate::currentDate());
+    ui->eventAmount->clear();
+    ui->eventRate->clear();
 }
