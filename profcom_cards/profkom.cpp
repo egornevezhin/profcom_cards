@@ -219,8 +219,8 @@ void Profkom::on_tabWidget_tabBarClicked(int index)
         for(int i=0;i<eventsVec.length();i++){
             ui->comboBoxEvents->addItem(eventsVec[i].name);
         }
-
     }
+    on_comboBoxEvents_activated(0);
 }
 
 void Profkom::on_comboBoxEvents_activated(int index)
