@@ -14,7 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QDateEdit>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -37,18 +37,27 @@ public:
     QWidget *tab;
     QLineEdit *ISU;
     QLabel *label;
-    QGraphicsView *Photo;
     QLabel *label_2;
     QLabel *label_3;
     QLabel *Fio;
     QGroupBox *groupBox;
     QLabel *label_5;
     QComboBox *Events;
-    QPushButton *pushButton;
+    QPushButton *buttonAddEvents;
     QGroupBox *groupBox_2;
     QLabel *Deposit;
-    QPushButton *pushButton_2;
+    QPushButton *buttonPayFees;
+    QLabel *labelPhoto;
     QWidget *tab_2;
+    QLabel *label_4;
+    QLineEdit *eventName;
+    QLabel *label_6;
+    QDateEdit *eventDate;
+    QLabel *label_7;
+    QLineEdit *eventAmount;
+    QLabel *label_8;
+    QLineEdit *eventRate;
+    QPushButton *eventAdd;
     QWidget *tab_3;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -77,19 +86,6 @@ public:
         font.setBold(true);
         font.setWeight(75);
         label->setFont(font);
-        Photo = new QGraphicsView(tab);
-        Photo->setObjectName(QStringLiteral("Photo"));
-        Photo->setGeometry(QRect(10, 30, 110, 150));
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(Photo->sizePolicy().hasHeightForWidth());
-        Photo->setSizePolicy(sizePolicy);
-        Photo->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        Photo->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        Photo->setInteractive(false);
-        Photo->setSceneRect(QRectF(0, 0, 0, 0));
-        Photo->setTransformationAnchor(QGraphicsView::AnchorViewCenter);
         label_2 = new QLabel(tab);
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(10, 10, 47, 13));
@@ -111,21 +107,58 @@ public:
         Events = new QComboBox(groupBox);
         Events->setObjectName(QStringLiteral("Events"));
         Events->setGeometry(QRect(10, 50, 171, 22));
-        pushButton = new QPushButton(groupBox);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(10, 80, 75, 23));
+        buttonAddEvents = new QPushButton(groupBox);
+        buttonAddEvents->setObjectName(QStringLiteral("buttonAddEvents"));
+        buttonAddEvents->setGeometry(QRect(10, 80, 75, 23));
         groupBox_2 = new QGroupBox(tab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         groupBox_2->setGeometry(QRect(400, 60, 161, 80));
         Deposit = new QLabel(groupBox_2);
         Deposit->setObjectName(QStringLiteral("Deposit"));
         Deposit->setGeometry(QRect(10, 20, 131, 16));
-        pushButton_2 = new QPushButton(groupBox_2);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(10, 50, 75, 23));
+        buttonPayFees = new QPushButton(groupBox_2);
+        buttonPayFees->setObjectName(QStringLiteral("buttonPayFees"));
+        buttonPayFees->setGeometry(QRect(10, 50, 75, 23));
+        labelPhoto = new QLabel(tab);
+        labelPhoto->setObjectName(QStringLiteral("labelPhoto"));
+        labelPhoto->setGeometry(QRect(10, 40, 110, 150));
+        labelPhoto->setLayoutDirection(Qt::LeftToRight);
+        labelPhoto->setAutoFillBackground(false);
+        labelPhoto->setAlignment(Qt::AlignCenter);
         tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
+        label_4 = new QLabel(tab_2);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(30, 20, 61, 16));
+        label_4->setFont(font);
+        eventName = new QLineEdit(tab_2);
+        eventName->setObjectName(QStringLiteral("eventName"));
+        eventName->setGeometry(QRect(30, 40, 241, 20));
+        label_6 = new QLabel(tab_2);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setGeometry(QRect(30, 70, 47, 13));
+        label_6->setFont(font);
+        eventDate = new QDateEdit(tab_2);
+        eventDate->setObjectName(QStringLiteral("eventDate"));
+        eventDate->setGeometry(QRect(30, 90, 91, 22));
+        label_7 = new QLabel(tab_2);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setGeometry(QRect(30, 120, 71, 16));
+        label_7->setFont(font);
+        eventAmount = new QLineEdit(tab_2);
+        eventAmount->setObjectName(QStringLiteral("eventAmount"));
+        eventAmount->setGeometry(QRect(30, 140, 241, 20));
+        label_8 = new QLabel(tab_2);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(30, 170, 81, 16));
+        label_8->setFont(font);
+        eventRate = new QLineEdit(tab_2);
+        eventRate->setObjectName(QStringLiteral("eventRate"));
+        eventRate->setGeometry(QRect(30, 190, 241, 20));
+        eventAdd = new QPushButton(tab_2);
+        eventAdd->setObjectName(QStringLiteral("eventAdd"));
+        eventAdd->setGeometry(QRect(200, 230, 75, 23));
         tabWidget->addTab(tab_2, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -144,7 +177,7 @@ public:
 
         retranslateUi(Profkom);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(Profkom);
@@ -162,12 +195,18 @@ public:
         Fio->setText(QString());
         groupBox->setTitle(QApplication::translate("Profkom", "\320\240\320\265\320\263\320\270\321\201\321\202\321\200\320\260\321\206\320\270\321\217", 0));
         label_5->setText(QApplication::translate("Profkom", "\320\227\320\260\321\200\320\265\320\263\320\270\321\201\321\202\321\200\320\270\321\200\320\276\320\262\320\260\321\202\321\214 \320\275\320\260 \320\274\320\265\321\200\320\276\320\277\321\200\320\270\321\217\321\202\320\270\320\265:", 0));
-        pushButton->setText(QApplication::translate("Profkom", "OK", 0));
+        buttonAddEvents->setText(QApplication::translate("Profkom", "OK", 0));
         groupBox_2->setTitle(QApplication::translate("Profkom", "\320\237\321\200\320\276\321\204\320\262\320\267\320\275\320\276\321\201\321\213", 0));
         Deposit->setText(QString());
-        pushButton_2->setText(QApplication::translate("Profkom", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214", 0));
+        buttonPayFees->setText(QApplication::translate("Profkom", "\320\236\320\277\320\273\320\260\321\202\320\270\321\202\321\214", 0));
+        labelPhoto->setText(QApplication::translate("Profkom", "\320\244\320\236\320\242\320\236", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("Profkom", "\320\255\320\272\321\201\320\272\321\203\321\200\321\201\320\270\320\270", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("Profkom", "\320\222\321\201\321\202\321\203\320\277\320\273\320\265\320\275\320\270\320\265", 0));
+        label_4->setText(QApplication::translate("Profkom", "\320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265", 0));
+        label_6->setText(QApplication::translate("Profkom", "\320\224\320\260\321\202\320\260", 0));
+        label_7->setText(QApplication::translate("Profkom", "\320\243\321\207\320\260\321\201\321\202\320\275\320\270\320\272\320\270", 0));
+        label_8->setText(QApplication::translate("Profkom", "\320\232\320\276\321\215\321\204\321\204\320\270\321\206\320\265\320\275\321\202", 0));
+        eventAdd->setText(QApplication::translate("Profkom", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("Profkom", "\320\234\320\265\321\200\320\276\320\277\321\200\320\270\321\217\321\202\320\270\321\217", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("Profkom", "\320\234\320\260\321\202\320\265\321\200\320\270\320\260\320\273\321\214\320\275\320\260\321\217 \320\277\320\276\320\274\320\276\321\211\321\214", 0));
     } // retranslateUi
 

@@ -17,13 +17,22 @@ Profkom::Profkom(QWidget *parent) :
     ui->setupUi(this);
 
     MBox = NULL;
-    isu;
 
     connectBD();
 
-    // запрос по мероприятиям
+    getEventList();
+
+}
+
+Profkom::~Profkom()
+{
+    delete ui;
+}
+
+void Profkom::getEventList(){
     QSqlQuery query;
     QVector<QString> name;
+    ui->Events->clear();
     query.prepare( "SELECT name FROM events");
     if(!query.exec()){
         ShowMessage("No find!","EROR");
@@ -38,11 +47,6 @@ Profkom::Profkom(QWidget *parent) :
             ui->Events->addItem(name[i]);
         }
     }
-}
-
-Profkom::~Profkom()
-{
-    delete ui;
 }
 
 void Profkom::ShowMessage(QString messageText, QString Title)
@@ -137,5 +141,27 @@ void Profkom::on_buttonPayFees_clicked()
     }
     else{
         ShowMessage(query.lastError().text(),"EROR");
+    }
+}
+
+void Profkom::on_eventAdd_clicked()
+{
+    QSqlQuery query;
+    QMessageBox mb;
+    if(!ui->eventName->text().isEmpty() && !ui->eventAmount->text().isEmpty() && !ui->eventRate->text().isEmpty()){
+        query.prepare("INSERT INTO events (name, date, amount, rate) VALUES ('" +
+                      ui->eventName->text() + "', '" +
+                      QString::number(ui->eventDate->date().year()) + "-" + QString::number(ui->eventDate->date().month()) + "-" + QString::number(ui->eventDate->date().day()) + "', '" +
+                      ui->eventAmount->text() + "', '" +
+                      ui->eventRate->text() +"')");
+        if(!query.exec()){
+            mb.setText(query.lastError().text());
+            mb.exec();
+        }
+        getEventList();
+    }
+    else{
+        mb.setText("Заполнены не все поля!");
+        mb.exec();
     }
 }

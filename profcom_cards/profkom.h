@@ -28,9 +28,13 @@ private slots:
 
     void connectBD();
 
+    void getEventList();
+
     void on_buttonAddEvents_clicked();
 
     void on_buttonPayFees_clicked();
+
+    void on_eventAdd_clicked();
 
 private:
     Ui::Profkom *ui;
