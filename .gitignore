@@ -1,0 +1,8 @@
+profcom_cards/debug/main.o
+*.cpp
+profcom_cards/debug/profcom_cards.exe
+profcom_cards/debug/moc_profkom.o
+*.o
+*.h
+profcom_cards/profkom.h
+profcom_cards/Makefile

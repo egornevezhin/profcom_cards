@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <QString>
-#include <qimage.h>
+#include <QImage>
 #include <QVector>
+#include <QMessageBox>
+#include <QUrl>
 
 namespace Ui {
 class Profkom;
@@ -20,16 +22,21 @@ public:
 
 
 private slots:
-    void on_lineEdit_textChanged(const QString &arg1);
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
+    void ShowMessage(QString messageText,QString Title);
 
     void on_ISU_textChanged(const QString &arg1);
 
+    void connectBD();
+
+    void on_buttonAddEvents_clicked();
+
+    void on_buttonPayFees_clicked();
+
 private:
     Ui::Profkom *ui;
+
+    QMessageBox *MBox;
+
     QString isu;
 };
 

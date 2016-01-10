@@ -1,7 +1,7 @@
 #include "profkom.h"
 #include "ui_profkom.h"
 #include <QSqlDatabase>
-#include <QMessageBox>
+
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QDebug>
@@ -12,86 +12,62 @@
 
 
 
-void conn(){
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("localhost");
-    db.setDatabaseName("profcom");
-    db.setUserName("prog");
-    db.setPassword("12");
-    bool ok = db.open();
-    QMessageBox mb;
-    if(ok)
-        mb.setText("Connected succesful!");
-    else
-        mb.setText(db.lastError().text());
-    mb.exec();
-}
-
 Profkom::Profkom(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::Profkom){
-        ui->setupUi(this);
-        conn();
+    ui->setupUi(this);
 
-        // запрос по мероприятиям
-        QMessageBox mb;
-        QSqlQuery query;
-        QVector<QString> name;
-        query.prepare( "SELECT NAME FROM EVENTS");
-        if(!query.exec()){
-            mb.setText("No find!");
-            mb.exec();
-        }
-        else{
-            query.first();
+    MBox = NULL;
+    isu;
+
+    connectBD();
+
+    // запрос по мероприятиям
+    QSqlQuery query;
+    QVector<QString> name;
+    query.prepare( "SELECT name FROM events");
+    if(!query.exec()){
+        ShowMessage("No find!","EROR");
+    }
+    else{
+        query.first();
+        name.push_back(query.value(0).toString());
+        while(query.next()){
             name.push_back(query.value(0).toString());
-            while(query.next()){
-                 name.push_back(query.value(0).toString());
-            }
-            for(int i=0;i<name.length();i++){
-                ui->Events->addItem(name[i]);
-            }
+        }
+        for(int i=0;i<name.length();i++){
+            ui->Events->addItem(name[i]);
         }
     }
+}
 
 Profkom::~Profkom()
 {
     delete ui;
 }
 
-void Profkom::on_pushButton_clicked()
+void Profkom::ShowMessage(QString messageText, QString Title)
 {
-    QSqlQuery query;
-    QString s;
-    QMessageBox mb;
-    s = ui->Events->currentText();
-    query.exec("SELECT ID FROM EVENTS WHERE NAME = '" + s +"'");
-    query.first();
-    int num = query.value(0).toInt();
-    if(ui->Deposit->text() == "Оплачены.")
-        query.exec("INSERT INTO EVENT_CHLENS (ISU, ID_EVENT) VALUES (" +
-                   ui->ISU->text() + ", " +
-                   QString::number(num) + ");");
-    else{
-        mb.setText("Не оплачены профвзносы");
-        mb.exec();
-    }
+    MBox=new QMessageBox;
+    MBox->setWindowTitle(Title.toUtf8());
+    MBox->setText(messageText.toUtf8());
+    MBox->show();
 }
 
-void Profkom::on_pushButton_2_clicked()
+void Profkom::connectBD()
 {
-    QSqlQuery query;
-    QString s;
-    QMessageBox mb;
-    s = isu;
-    query.prepare("UPDATE CHLENS SET DEPOSIT = '1' WHERE ISU = " + s);
-    if(query.exec()){
-         ui->Deposit->setText("Оплачены.");
-    }
-    else{
-        mb.setText(query.lastError().text());
-        mb.exec();
-    }
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    db.setHostName("94.19.5.51");
+    db.setDatabaseName("profcom");
+    db.setUserName("profcom");
+    db.setPassword("12");
+    bool ok = db.open();
+    if(ok)
+        ShowMessage("Connected succesful!","OK");
+    else
+        ShowMessage(db.lastError().text(),"EROR");
 }
+
+
 
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
@@ -99,44 +75,67 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
     if(ui->ISU->text().size() == 6){
         isu = arg1;
         QSqlQuery query;
-        QMessageBox mb;
 
-        query.prepare("(SELECT FIO FROM CHLENS WHERE ISU = " + isu + ") UNION (" +
-                      "SELECT PHOTO FROM PHOTO WHERE ISU = " + isu + ") UNION (" +
-                      "SELECT DEPOSIT FROM CHLENS WHERE ISU = " + isu + ")");
+        query.prepare("SELECT fio, photo_url, deposit FROM chlens WHERE isu = " + isu);
 
         if(!query.exec()){
-            mb.setText(query.lastError().text());
-            mb.exec();
+            ShowMessage(query.lastError().text(),"EROR");
         }
         else{
             query.first(); // запрос по фио
+            ui->Fio->setText(query.value(0).toString());
 
-            fio = query.value(0).toString();
-            ui->Fio->setText(fio);
+            //query.next(); // запрос по фоточке
+            //getFile(QUrl(query.value(1).toString()));
+            QPixmap pixmap("buf.png");
+            ui->labelPhoto->setPixmap(pixmap.scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
-            query.next(); // запрос по фоточке
+            //            QByteArray array = query.value(0).toByteArray();
+            //            QBuffer buffer(&array);
+            //            buffer.open( QIODevice::ReadOnly );
+            //            QImageReader reader(&buffer, "jpg");
+            //            QImage image = reader.read();
+            //            QGraphicsScene *scn = new QGraphicsScene( ui->Photo );
+            //            ui->Photo->setScene( scn );
+            //            QPixmap pix( QPixmap::fromImage(image) );
+            //            scn->addPixmap( pix );
+            //            ui->Photo->show();
 
-            QByteArray array = query.value(0).toByteArray();
-            QBuffer buffer(&array);
-            buffer.open( QIODevice::ReadOnly );
-            QImageReader reader(&buffer, "jpg");
-            QImage image = reader.read();
-            QGraphicsScene *scn = new QGraphicsScene( ui->Photo );
-            ui->Photo->setScene( scn );
-            QPixmap pix( QPixmap::fromImage(image) );
-            scn->addPixmap( pix );
-            ui->Photo->show();
-
-            query.next(); // запрос по профвзносам
-
-            deposit = query.value(0).toString();
-            if(deposit == "1")
+            //query.next(); // запрос по профвзносам
+            if(query.value(2).toString() == "1")
                 ui->Deposit->setText("Оплачены.");
             else
                 ui->Deposit->setText("Не оплачены.");
         }
 
         ui->ISU->clear();
+    }
+}
+
+
+void Profkom::on_buttonAddEvents_clicked()
+{
+    QSqlQuery query;
+    query.exec("SELECT id FROM events WHERE name = '" +  ui->Events->currentText() +"'");
+    query.first();
+    int num = query.value(0).toInt();
+    if(ui->Deposit->text() == "Оплачены.")
+        query.exec("INSERT INTO event_chlens (isu, id_event) VALUES (" +
+                   ui->ISU->text() + ", " +
+                   QString::number(num) + ");");
+    else{
+        ShowMessage("Не оплачены профвзносы","WARNING");
+    }
+}
+
+void Profkom::on_buttonPayFees_clicked()
+{
+    QSqlQuery query;
+    query.prepare("UPDATE chlens SET deposit = '1' WHERE isu = " + isu);
+    if(query.exec()){
+        ui->Deposit->setText("Оплачены.");
+    }
+    else{
+        ShowMessage(query.lastError().text(),"EROR");
     }
 }
