@@ -9,7 +9,7 @@
 #include <QImageReader>
 #include <QPixmap>
 #include <vector>
-
+#include <QUrl>
 
 
 Profkom::Profkom(QWidget *parent) :
@@ -89,24 +89,11 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             query.first(); // запрос по фио
             ui->Fio->setText(query.value(0).toString());
 
-            //query.next(); // запрос по фоточке
-            //getFile(QUrl(query.value(1).toString()));
-            QPixmap pixmap("buf.png");
-            ui->labelPhoto->setPixmap(pixmap.scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+            QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);                // запрос по фоточке
+            connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getImage(QNetworkReply*)));
+            networkManager->get(QNetworkRequest(QUrl("http://94.19.5.51/profcom/photo/"+isu+".png")));
 
-            //            QByteArray array = query.value(0).toByteArray();
-            //            QBuffer buffer(&array);
-            //            buffer.open( QIODevice::ReadOnly );
-            //            QImageReader reader(&buffer, "jpg");
-            //            QImage image = reader.read();
-            //            QGraphicsScene *scn = new QGraphicsScene( ui->Photo );
-            //            ui->Photo->setScene( scn );
-            //            QPixmap pix( QPixmap::fromImage(image) );
-            //            scn->addPixmap( pix );
-            //            ui->Photo->show();
-
-            //query.next(); // запрос по профвзносам
-            if(query.value(2).toString() == "1")
+            if(query.value(2).toString() == "1")    // запрос по профвзносам
                 ui->Deposit->setText("Оплачены.");
             else
                 ui->Deposit->setText("Не оплачены.");
@@ -147,7 +134,6 @@ void Profkom::on_buttonPayFees_clicked()
 void Profkom::on_eventAdd_clicked()
 {
     QSqlQuery query;
-    QMessageBox mb;
     if(!ui->eventName->text().isEmpty() && !ui->eventAmount->text().isEmpty() && !ui->eventRate->text().isEmpty()){
         query.prepare("INSERT INTO events (name, date, amount, rate) VALUES ('" +
                       ui->eventName->text() + "', '" +
@@ -155,13 +141,23 @@ void Profkom::on_eventAdd_clicked()
                       ui->eventAmount->text() + "', '" +
                       ui->eventRate->text() +"')");
         if(!query.exec()){
-            mb.setText(query.lastError().text());
-            mb.exec();
+           ShowMessage(query.lastError().text(),"EROR");
         }
         getEventList();
     }
     else{
-        mb.setText("Заполнены не все поля!");
-        mb.exec();
+        ShowMessage("Заполнены не все поля!","EROR");
+    }
+}
+
+void Profkom::getImage(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray data = reply->readAll();
+        QImage image = QImage::fromData(data);
+        ui->labelPhoto->setPixmap(QPixmap::fromImage(image).scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+    }else {
+       ShowMessage("Не удалось загрузить изображение.\nВозможно файл отцуствует.","WARNING");
     }
 }

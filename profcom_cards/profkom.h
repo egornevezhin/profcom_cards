@@ -6,7 +6,7 @@
 #include <QImage>
 #include <QVector>
 #include <QMessageBox>
-#include <QUrl>
+#include <QtNetwork>
 
 namespace Ui {
 class Profkom;
@@ -35,6 +35,8 @@ private slots:
     void on_buttonPayFees_clicked();
 
     void on_eventAdd_clicked();
+
+    void getImage(QNetworkReply *reply);
 
 private:
     Ui::Profkom *ui;

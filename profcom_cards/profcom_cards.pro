@@ -21,6 +21,8 @@ FORMS    += profkom.ui
 
 QT += sql
 
+QT +=network
+
 CONFIG += qsqlmysql
 
 QT += core

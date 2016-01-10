@@ -6,3 +6,9 @@ profcom_cards/debug/moc_profkom.o
 *.h
 profcom_cards/profkom.h
 profcom_cards/Makefile
+*.ca2c4b7
+profcom_cards/Makefile.Debug
+*.user
+*.Release
+profcom_cards/profcom_cards.pro.user
+*.user
