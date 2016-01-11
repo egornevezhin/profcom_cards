@@ -231,18 +231,18 @@ void Profkom::on_comboBoxEvents_activated(int index)
         ui->eventDate->setDate(eventsVec[index].date);
         ui->eventAmount->setText(QString::number(eventsVec[index].amount));
         ui->eventRate->setText(QString::number(eventsVec[index].rate));
-        ui->buttonDelteEvent->setEnabled(1);
+        ui->buttonDeleteEvent->setEnabled(1);
     }
     else{
         ui->eventName->clear();
         ui->eventDate->setDate(QDate::currentDate());
         ui->eventAmount->clear();
         ui->eventRate->clear();
-        ui->buttonDelteEvent->setEnabled(0);
+        ui->buttonDeleteEvent->setEnabled(0);
     }
 }
 
-void Profkom::on_buttonDelteEvent_clicked()
+void Profkom::on_buttonDeleteEvent_clicked()
 {
     QSqlQuery query;
     query.prepare("DELETE FROM events WHERE id = '"+QString::number(eventsVec[ui->comboBoxEvents->currentIndex()-1].id)+"'");

@@ -42,7 +42,7 @@ private slots:
 
     void on_comboBoxEvents_activated(int index);
 
-    void on_buttonDelteEvent_clicked();
+    void on_buttonDeleteEvent_clicked();
 
 private:
     Ui::Profkom *ui;
