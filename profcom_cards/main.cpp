@@ -1,5 +1,6 @@
 #include "profkom.h"
 #include <QApplication>
+#include "ui_profkom.h"
 
 
 int main(int argc, char *argv[])

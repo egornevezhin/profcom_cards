@@ -2,6 +2,7 @@
 #include "ui_profkom.h"
 #include <QSqlDatabase>
 
+#include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QDebug>
@@ -10,6 +11,9 @@
 #include <QPixmap>
 #include <vector>
 #include <QUrl>
+#include <QFileDialog>
+#include <QStandardItemModel>
+#include <QTableWidgetItem>
 
 
 Profkom::Profkom(QWidget *parent) :
@@ -259,3 +263,80 @@ void Profkom::on_buttonDeleteEvent_clicked()
     ui->eventAmount->clear();
     ui->eventRate->clear();
 }
+
+void Profkom::on_openEventFile_clicked()
+{
+    QSqlQuery query;
+    QVector<people> list;
+    people chel;
+    QString str = QFileDialog::getOpenFileName(0, "Выберите файл с мерприятием", "", "*.csv");
+    QFile file(str);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Ошибка открытия для чтения";
+    }
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine();
+        // ИСУ
+        chel.isu = line.split(';')[0];
+        // телефон
+        chel.phone = line.split(';')[1];
+        query.exec("UPDATE  chlens SET  phone = " + chel.phone + " WHERE  isu = " + chel.isu);
+
+        query.exec("SELECT isu, fio, phone,sum(rate) FROM events,chlens WHERE isu = " + chel.isu + " AND id_event in (SELECT id_event FROM event_chlens WHERE isu = " + chel.isu + ")");
+
+        // ФИО
+        query.first();
+        chel.fio = query.value(1).toString();
+        // коэффицент
+        chel.rate = query.value(3).toString();
+        list.push_back(chel);
+    }
+    people temp;
+    int m;
+    for (int i=0; i < list.size() - 1; i++){
+        m = i;
+        for (int j = i + 1; j < list.size(); j++){
+            if(list[j].rate.toInt() < list[m].rate.toInt())
+                m = j;
+        }
+        temp.fio = list[i].fio;
+        temp.isu = list[i].isu;
+        temp.phone = list[i].phone;
+        temp.rate = list[i].rate;
+
+        list[i].fio = list[m].fio;
+        list[i].isu = list[m].isu;
+        list[i].phone = list[m].phone;
+        list[i].rate = list[m].rate;
+
+        list[m].fio = temp.fio;
+        list[m].isu = temp.isu;
+        list[m].phone = temp.phone;
+        list[m].rate = temp.rate;
+    }
+    ui->eventsTable->setRowCount(list.size());
+    for(int i=0;i<list.size();i++){
+        // ису
+        ui->eventsTable->setItem(i, 0, new QTableWidgetItem(list[i].isu));
+        // ФИO
+        ui->eventsTable->setItem(i, 1, new QTableWidgetItem(list[i].fio));
+        // телефон
+        ui->eventsTable->setItem(i, 2, new QTableWidgetItem(list[i].phone));
+        // коэффицент
+        ui->eventsTable->setItem(i, 3, new QTableWidgetItem(list[i].rate));
+    }
+}
+
+
+    /*
+    query.prepare("SELECT id_event FROM events_chlens WHERE isu = '" + QString::number(isu) + "'");
+    if(!query.exec()){
+        ShowMessage(query.lastError().text(),"ERROR");
+    }
+    else{
+        while(query.next()){
+            a.push_back(query.value(0));
+        }
+    }*/
+

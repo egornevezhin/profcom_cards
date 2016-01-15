@@ -44,6 +44,8 @@ private slots:
 
     void on_buttonDeleteEvent_clicked();
 
+    void on_openEventFile_clicked();
+
 private:
     Ui::Profkom *ui;
 
@@ -57,6 +59,13 @@ private:
       QDate date;
       int amount;
       int rate;
+    };
+
+    struct people{
+        QString isu;
+        QString rate;
+        QString phone;
+        QString fio;
     };
 
     QVector<events> eventsVec;
