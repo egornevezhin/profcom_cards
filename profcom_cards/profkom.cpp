@@ -35,6 +35,7 @@ Profkom::~Profkom()
     delete ui;
 }
 
+    // получение списка мероприятий
 void Profkom::getEventList(){
     QSqlQuery query;
     QVector<QString> name;
@@ -55,6 +56,7 @@ void Profkom::getEventList(){
     }
 }
 
+    // метод вывода сообщений
 void Profkom::ShowMessage(QString messageText, QString Title)
 {
     MBox=new QMessageBox;
@@ -63,6 +65,7 @@ void Profkom::ShowMessage(QString messageText, QString Title)
     MBox->show();
 }
 
+    // метод соединения с БД
 void Profkom::connectBD()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -78,7 +81,7 @@ void Profkom::connectBD()
 }
 
 
-
+    // метод обработки ввода ИСУ
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
     QString s, fio, deposit;
@@ -113,6 +116,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
 }
 
 
+    // метод добавления мероприятия
 void Profkom::on_buttonAddEvents_clicked()
 {
     QSqlQuery query;
@@ -128,6 +132,7 @@ void Profkom::on_buttonAddEvents_clicked()
     }
 }
 
+    // метод оплаты профвзносов
 void Profkom::on_buttonPayFees_clicked()
 {
     QSqlQuery query;
@@ -140,6 +145,7 @@ void Profkom::on_buttonPayFees_clicked()
     }
 }
 
+    // метод добавления мероприятия
 void Profkom::on_eventAdd_clicked()
 {
     QSqlQuery query;
@@ -180,6 +186,7 @@ void Profkom::on_eventAdd_clicked()
 
 }
 
+    // получение изображения члена ИСУ
 void Profkom::getImage(QNetworkReply *reply)
 {
     QByteArray data;
@@ -195,6 +202,7 @@ void Profkom::getImage(QNetworkReply *reply)
     ui->labelPhoto->setPixmap(QPixmap::fromImage(image).scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 }
 
+    // фишечка Андрея на редактирование мероприятия
 void Profkom::on_tabWidget_tabBarClicked(int index)
 {
     if(index == 0){
@@ -227,6 +235,7 @@ void Profkom::on_tabWidget_tabBarClicked(int index)
     on_comboBoxEvents_activated(0);
 }
 
+    //
 void Profkom::on_comboBoxEvents_activated(int index)
 {
     if(index!=0){
@@ -246,6 +255,7 @@ void Profkom::on_comboBoxEvents_activated(int index)
     }
 }
 
+    // метод удаления мероприятия
 void Profkom::on_buttonDeleteEvent_clicked()
 {
     QSqlQuery query;
@@ -264,6 +274,7 @@ void Profkom::on_buttonDeleteEvent_clicked()
     ui->eventRate->clear();
 }
 
+    // метод открытия файла с мероприятием
 void Profkom::on_openEventFile_clicked()
 {
     QSqlQuery query;
@@ -327,16 +338,3 @@ void Profkom::on_openEventFile_clicked()
         ui->eventsTable->setItem(i, 3, new QTableWidgetItem(list[i].rate));
     }
 }
-
-
-    /*
-    query.prepare("SELECT id_event FROM events_chlens WHERE isu = '" + QString::number(isu) + "'");
-    if(!query.exec()){
-        ShowMessage(query.lastError().text(),"ERROR");
-    }
-    else{
-        while(query.next()){
-            a.push_back(query.value(0));
-        }
-    }*/
-
