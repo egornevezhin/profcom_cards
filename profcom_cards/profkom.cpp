@@ -93,7 +93,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
         query.prepare("SELECT fio, photo_url, deposit FROM chlens WHERE isu = " + isu);
 
         if(!query.exec()){
-            ShowMessage(query.lastError().text(),"EROR");
+            ShowMessage(query.lastError().text(),"ERROR");
         }
         else{
             query.first(); // запрос по фио
@@ -104,10 +104,12 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             networkManager->get(QNetworkRequest(QUrl("http://94.19.5.51/profcom/photo/"+isu+".png")));
 
             if(query.value(2).toString() == "1"){    // запрос по профвзносам
+                ui->Deposit->setStyleSheet("QLabel { background-color : white; color : green; }");
                 ui->Deposit->setText("Оплачены.");
                 ui->buttonPayFees->setEnabled(0);
             }
             else{
+                ui->Deposit->setStyleSheet("QLabel { background-color : white; color : red; }");
                 ui->Deposit->setText("Не оплачены.");
                 ui->buttonPayFees->setEnabled(1);
             }
@@ -116,17 +118,25 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
 }
 
 
-    // метод добавления мероприятия
+    // метод добавления на мероприятие
 void Profkom::on_buttonAddEvents_clicked()
 {
     QSqlQuery query;
-    query.exec("SELECT id FROM events WHERE name = '" +  ui->Events->currentText() +"'");
+    query.exec("SELECT id_event FROM events WHERE name = '" +  ui->Events->currentText() +"'");
     query.first();
     int num = query.value(0).toInt();
-    if(ui->Deposit->text() == "Оплачены.")
+    if(ui->Deposit->text() == "Оплачены."){
+        query.exec("SELECT id_event FROM event_chlens WHERE isu = " + ui->ISU->text());
+        while(query.next()){
+            if(query.value(0).toInt() == num){
+                ShowMessage("Уже на экскурсии","WARNING");
+                return;
+            }
+        }
         query.exec("INSERT INTO event_chlens (isu, id_event) VALUES (" +
-                   ui->ISU->text() + ", " +
-                   QString::number(num) + ");");
+                ui->ISU->text() + ", " +
+                QString::number(num) + ");");
+    }
     else{
         ShowMessage("Не оплачены профвзносы","WARNING");
     }
@@ -138,6 +148,7 @@ void Profkom::on_buttonPayFees_clicked()
     QSqlQuery query;
     query.prepare("UPDATE chlens SET deposit = '1' WHERE isu = " + isu);
     if(query.exec()){
+        ui->Deposit->setStyleSheet("QLabel { background-color : white; color : green; }");
         ui->Deposit->setText("Оплачены.");
     }
     else{
@@ -169,9 +180,9 @@ void Profkom::on_eventAdd_clicked()
                       "date = '"+QString::number(ui->eventDate->date().year()) + "-" + QString::number(ui->eventDate->date().month()) + "-" + QString::number(ui->eventDate->date().day()) + "', " +
                       "amount = '"+ui->eventAmount->text() + "', " +
                       "rate = '"+ui->eventRate->text() + "' "+
-                      "WHERE id = '"+QString::number(eventsVec[ui->comboBoxEvents->currentIndex()-1].id)+"'");
+                      "WHERE id_event = '"+QString::number(eventsVec[ui->comboBoxEvents->currentIndex()-1].id)+"'");
         if(!query.exec()){
-            ShowMessage(query.lastError().text(),"EROR");
+            ShowMessage(query.lastError().text(),"ERROR");
         }else{
             ShowMessage("Изменения успешно сохранены","ОК");
         }
@@ -259,7 +270,7 @@ void Profkom::on_comboBoxEvents_activated(int index)
 void Profkom::on_buttonDeleteEvent_clicked()
 {
     QSqlQuery query;
-    query.prepare("DELETE FROM events WHERE id = '"+QString::number(eventsVec[ui->comboBoxEvents->currentIndex()-1].id)+"'");
+    query.prepare("DELETE FROM events WHERE id_event = '"+QString::number(eventsVec[ui->comboBoxEvents->currentIndex()-1].id)+"'");
     if(!query.exec()){
         ShowMessage(query.lastError().text(),"EROR");
     }else{
