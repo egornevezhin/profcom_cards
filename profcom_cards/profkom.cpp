@@ -84,8 +84,8 @@ void Profkom::connectBD()
     // метод обработки ввода ИСУ
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
-    QString s, fio, deposit;
     ui->labelPhoto->setText("");
+    ui->visitedEventsList->clear();
     if(ui->ISU->text().size() == 6){
         isu = arg1;
         QSqlQuery query;
@@ -113,6 +113,12 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
                 ui->Deposit->setText("Не оплачены.");
                 ui->buttonPayFees->setEnabled(1);
             }
+
+            query.exec("SELECT name FROM events WHERE id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
+            while(query.next()){
+                ui->visitedEventsList->addItem(query.value(0).toString());
+            }
+
         }
     }
 }

@@ -166,6 +166,22 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_9">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Посещенные мероприятия</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListWidget" name="visitedEventsList"/>
+          </item>
+          <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -405,13 +421,6 @@
         </property>
        </widget>
       </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
      </widget>
     </item>
    </layout>
