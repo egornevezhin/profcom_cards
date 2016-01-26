@@ -214,7 +214,7 @@ void Profkom::getImage(QNetworkReply *reply)
         image = QImage::fromData(data);
 
     }else {
-        ShowMessage("Не удалось загрузить изображение.\nВозможно файл отцуствует.","WARNING");
+        ShowMessage("Не удалось загрузить изображение.\nВозможно файл отсуствует.","WARNING");
     }
     ui->labelPhoto->setPixmap(QPixmap::fromImage(image).scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 }
