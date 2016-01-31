@@ -5,16 +5,16 @@
 #include <QFile>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QDebug>
 #include <QBuffer>
 #include <QImageReader>
 #include <QPixmap>
-#include <vector>
 #include <QUrl>
 #include <QFileDialog>
 #include <QStandardItemModel>
 #include <QTableWidgetItem>
-
+#include <QFile>
+#include <QPrinter>
+#include <QTextDocument>
 
 Profkom::Profkom(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::Profkom){
@@ -35,7 +35,7 @@ Profkom::~Profkom()
     delete ui;
 }
 
-    // получение списка мероприятий
+// получение списка мероприятий
 void Profkom::getEventList(){
     QSqlQuery query;
     QVector<QString> name;
@@ -56,7 +56,7 @@ void Profkom::getEventList(){
     }
 }
 
-    // метод вывода сообщений
+// метод вывода сообщений
 void Profkom::ShowMessage(QString messageText, QString Title)
 {
     MBox=new QMessageBox;
@@ -65,7 +65,7 @@ void Profkom::ShowMessage(QString messageText, QString Title)
     MBox->show();
 }
 
-    // метод соединения с БД
+// метод соединения с БД
 void Profkom::connectBD()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -81,7 +81,7 @@ void Profkom::connectBD()
 }
 
 
-    // метод обработки ввода ИСУ
+// метод обработки ввода ИСУ
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
     ui->labelPhoto->setText("");
@@ -124,7 +124,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
 }
 
 
-    // метод добавления на мероприятие
+// метод добавления на мероприятие
 void Profkom::on_buttonAddEvents_clicked()
 {
     QSqlQuery query;
@@ -140,15 +140,15 @@ void Profkom::on_buttonAddEvents_clicked()
             }
         }
         query.exec("INSERT INTO event_chlens (isu, id_event) VALUES (" +
-                ui->ISU->text() + ", " +
-                QString::number(num) + ");");
+                   ui->ISU->text() + ", " +
+                   QString::number(num) + ");");
     }
     else{
         ShowMessage("Не оплачены профвзносы","WARNING");
     }
 }
 
-    // метод оплаты профвзносов
+// метод оплаты профвзносов
 void Profkom::on_buttonPayFees_clicked()
 {
     QSqlQuery query;
@@ -162,7 +162,7 @@ void Profkom::on_buttonPayFees_clicked()
     }
 }
 
-    // метод добавления мероприятия
+// метод добавления мероприятия
 void Profkom::on_eventAdd_clicked()
 {
     QSqlQuery query;
@@ -203,7 +203,7 @@ void Profkom::on_eventAdd_clicked()
 
 }
 
-    // получение изображения члена ИСУ
+// получение изображения члена ИСУ
 void Profkom::getImage(QNetworkReply *reply)
 {
     QByteArray data;
@@ -219,7 +219,7 @@ void Profkom::getImage(QNetworkReply *reply)
     ui->labelPhoto->setPixmap(QPixmap::fromImage(image).scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 }
 
-    // фишечка Андрея на редактирование мероприятия
+// фишечка Андрея на редактирование мероприятия
 void Profkom::on_tabWidget_tabBarClicked(int index)
 {
     if(index == 0){
@@ -252,7 +252,7 @@ void Profkom::on_tabWidget_tabBarClicked(int index)
     on_comboBoxEvents_activated(0);
 }
 
-    //
+//
 void Profkom::on_comboBoxEvents_activated(int index)
 {
     if(index!=0){
@@ -272,7 +272,7 @@ void Profkom::on_comboBoxEvents_activated(int index)
     }
 }
 
-    // метод удаления мероприятия
+// метод удаления мероприятия
 void Profkom::on_buttonDeleteEvent_clicked()
 {
     QSqlQuery query;
@@ -291,7 +291,7 @@ void Profkom::on_buttonDeleteEvent_clicked()
     ui->eventRate->clear();
 }
 
-    // метод открытия файла с мероприятием
+// метод открытия файла с мероприятием
 void Profkom::on_openEventFile_clicked()
 {
     QSqlQuery query;
@@ -354,4 +354,66 @@ void Profkom::on_openEventFile_clicked()
         // коэффицент
         ui->eventsTable->setItem(i, 3, new QTableWidgetItem(list[i].rate));
     }
+}
+
+void Profkom::saveListParticipant(QList<Profkom::people> list, QString type)   //Метод сохранения списка участников мероприятия в указанном формате. Поддерживаются форматы pdf,csv
+{
+    if(type == "csv"){
+        QString csv="ФИО;тел.\n";
+        for(int i=0;i<list.size();i++){
+            csv += list[i].fio+list[i].phone+"\n";
+        }
+        QFile csvFile(QFileDialog::getSaveFileName(this, "Cохранить файл","","Excel (*.csv)"));
+        if(!csvFile.open(QIODevice::WriteOnly)){
+            ShowMessage("Ошибка в записи\nОбратитесь к админимтратору","EROR");
+        }
+        csvFile.write(utf8ToWindows1251(csv));
+        csvFile.close();
+        ShowMessage("CSV файл успешно создан!","ОК");
+        //        using namespace libxl;
+        //        libxl::Book* xcelBook = xlCreateXMLBookA();
+        //        Sheet* xcelSheet = xcelBook->addSheet(utf8ToWindows1251("Участники"));
+
+        //        xcelSheet->writeStr(1, 0, utf8ToWindows1251("ФИО"));
+        //        xcelSheet->writeStr(1, 1, utf8ToWindows1251("тел"));
+
+        //        for(int i=0;i<list.size();i++){
+        //            xcelSheet->writeStr(i+2, 0, utf8ToWindows1251(list[i].fio));
+        //            xcelSheet->writeStr(i+2, 1, utf8ToWindows1251(list[i].phone));
+        //        }
+        //        xcelBook->save(utf8ToWindows1251(QFileDialog::getSaveFileName(this, "Cохранить файл","","Excel (*.xlsx)")));
+        //        xcelBook->release();
+
+        return;
+    }
+    if(type == "pdf"){
+        QString html= "<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"ru\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
+                "</head>\n<body>\n<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" border-color=\"red\">\n<tbody>\n<tr>\n<td>\n<p>ФИО</p>\n</td>\n</tr>\n";
+        for(int i=0;i<list.size();i++){
+            html += "<tr>\n<td>\n<p>"+list[i].fio+"</p>\n</td>\n</tr>\n";
+        }
+        html += "</tbody>\n</table>\n</body>\n</html>";
+
+        QTextDocument *document = new QTextDocument();
+        document->setHtml(html);
+
+        QPrinter printer(QPrinter::HighResolution);
+        printer.setPageSize(QPrinter::A4);
+        printer.setOutputFormat(QPrinter::PdfFormat);
+
+        printer.setOutputFileName(QFileDialog::getSaveFileName(this, "Cохранить файл","","PDF (*.pdf)"));
+
+        document->print(&printer);
+        delete document;
+
+        ShowMessage("PDF файл успешно создан!","ОК");
+        return;
+    }else{
+        ShowMessage("Указанный формат не поддерживается","EROR");
+    }
+}
+
+QByteArray Profkom::utf8ToWindows1251(QString utf8)
+{
+    return QTextCodec::codecForName("Windows-1251")->fromUnicode(QByteArray(QString(utf8).toStdString().c_str()));
 }

@@ -20,6 +20,30 @@ public:
     explicit Profkom(QWidget *parent = 0);
     ~Profkom();
 
+private:
+    Ui::Profkom *ui;
+
+    QMessageBox *MBox;
+
+    QString isu;
+
+    struct events{
+      int id;
+      QString name;
+      QDate date;
+      int amount;
+      int rate;
+    };
+
+    struct people{
+        QString isu;
+        QString rate;
+        QString phone;
+        QString fio;
+    };
+
+    QVector<events> eventsVec;
+
 
 private slots:
     void ShowMessage(QString messageText,QString Title);
@@ -46,29 +70,9 @@ private slots:
 
     void on_openEventFile_clicked();
 
-private:
-    Ui::Profkom *ui;
+    void saveListParticipant(QList<people> list, QString type);
 
-    QMessageBox *MBox;
-
-    QString isu;
-
-    struct events{
-      int id;
-      QString name;
-      QDate date;
-      int amount;
-      int rate;
-    };
-
-    struct people{
-        QString isu;
-        QString rate;
-        QString phone;
-        QString fio;
-    };
-
-    QVector<events> eventsVec;
+    QByteArray utf8ToWindows1251(QString utf8);
 
 };
 

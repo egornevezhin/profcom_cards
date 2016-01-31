@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql network printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,11 +19,4 @@ HEADERS  += profkom.h
 
 FORMS    += profkom.ui
 
-QT += sql
-
-QT +=network
-
 CONFIG += qsqlmysql
-
-QT += core
-
