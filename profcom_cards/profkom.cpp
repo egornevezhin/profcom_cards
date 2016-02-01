@@ -417,3 +417,22 @@ QByteArray Profkom::utf8ToWindows1251(QString utf8)
 {
     return QTextCodec::codecForName("Windows-1251")->fromUnicode(QByteArray(QString(utf8).toStdString().c_str()));
 }
+
+void Profkom::on_outEventListButtion_clicked()
+{
+    if(ui->eventsTable->rowCount() != 0){
+
+        QList<Profkom::people> outEventList;
+        Profkom::people out;
+        for (int row = 0 ; row < ui->eventsTable->rowCount() ; ++row) {
+            out.fio = ui->eventsTable->item(row, 1)->text();
+            out.phone = ui->eventsTable->item(row, 2)->text();
+            outEventList.push_back(out);
+        }
+
+        saveListParticipant(outEventList, "pdf");
+    }
+    else{
+        ShowMessage("Таблица пуста", "ERROR");
+    }
+}

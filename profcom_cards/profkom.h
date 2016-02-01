@@ -74,6 +74,7 @@ private slots:
 
     QByteArray utf8ToWindows1251(QString utf8);
 
+    void on_outEventListButtion_clicked();
 };
 
 #endif // PROFKOM_H

@@ -24,7 +24,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -418,6 +418,19 @@
         </property>
         <property name="text">
          <string>Открыть</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="outEventListButtion">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>270</y>
+          <width>71</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Списки</string>
         </property>
        </widget>
       </widget>
