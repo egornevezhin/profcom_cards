@@ -40,6 +40,7 @@ void Profkom::getEventList(){
     QSqlQuery query;
     QVector<QString> name;
     ui->Events->clear();
+    ui->finalEventList->clear();
     query.prepare( "SELECT name FROM events WHERE date>=CURDATE()");
     if(!query.exec()){
         ShowMessage("No find!","EROR");
@@ -52,6 +53,7 @@ void Profkom::getEventList(){
         }
         for(int i=0;i<name.length();i++){
             ui->Events->addItem(name[i]);
+            ui->finalEventList->addItem(name[i]);
         }
     }
 }
@@ -289,6 +291,7 @@ void Profkom::on_buttonDeleteEvent_clicked()
     ui->eventDate->setDate(QDate::currentDate());
     ui->eventAmount->clear();
     ui->eventRate->clear();
+    getEventList();
 }
 
 // метод открытия файла с мероприятием
@@ -303,6 +306,8 @@ void Profkom::on_openEventFile_clicked()
     {
         qDebug() << "Ошибка открытия для чтения";
     }
+    ui->eventsTable->setColumnCount(4);
+    ui->eventsTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
         // ИСУ
@@ -409,11 +414,18 @@ QByteArray Profkom::utf8ToWindows1251(QString utf8)
 
 void Profkom::on_outEventListButtion_clicked()
 {
+    QSqlQuery query;
+    query.exec("SELECT amount FROM events WHERE name = '" + ui->finalEventList->currentText() + "'");
+    query.next();
+    int rowc = query.value(0).toInt();
+    rowc += rowc / 2;
     if(ui->eventsTable->rowCount() != 0){
-
+        if((rowc) > ui->eventsTable->rowCount()){
+            rowc = ui->eventsTable->rowCount();
+        }
         QList<Profkom::people> outEventList;
         Profkom::people out;
-        for (int row = 0 ; row < ui->eventsTable->rowCount() ; ++row) {
+        for (int row = 0 ; row < rowc ; ++row) {
             out.fio = ui->eventsTable->item(row, 1)->text();
             out.phone = ui->eventsTable->item(row, 2)->text();
             outEventList.push_back(out);
