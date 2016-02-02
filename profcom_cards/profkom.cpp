@@ -437,3 +437,19 @@ void Profkom::on_outEventListButtion_clicked()
         ShowMessage("Таблица пуста", "ERROR");
     }
 }
+
+void Profkom::on_comboBoxEvents_currentTextChanged(const QString &currEvent)
+{
+    QSqlQuery query;
+    QVector<QString> ppl;
+    ui->eventPeopleTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    query.exec("SELECT fio FROM chlens WHERE isu IN (SELECT isu FROM event_chlens WHERE id_event = (SELECT id_event FROM events WHERE name = '" + currEvent + "'))");
+    while(query.next()){
+        ppl.push_back(query.value(0).toString());
+    }
+    ui->eventPeopleTable->setRowCount(ppl.size());
+    ui->eventPeopleTable->setColumnCount(1);
+    for(int i=0; i < ppl.size(); i++){
+        ui->eventPeopleTable->setItem(i, 0, new QTableWidgetItem(ppl[i]));
+    }
+}

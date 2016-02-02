@@ -75,6 +75,7 @@ private slots:
     QByteArray utf8ToWindows1251(QString utf8);
 
     void on_outEventListButtion_clicked();
+    void on_comboBoxEvents_currentTextChanged(const QString &arg1);
 };
 
 #endif // PROFKOM_H
