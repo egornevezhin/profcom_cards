@@ -82,17 +82,26 @@ void Profkom::connectBD()
         ShowMessage(db.lastError().text(),"EROR");
 }
 
+QString Profkom::phoneChange(QString tel){
+    QString fin = "+7 (";
+    fin = fin + tel[1] + tel[2] + tel[3] + ") ";
+    fin = fin + tel[4] + tel[5] + tel[6] + "-";
+    fin = fin + tel[7] + tel[8] + "-";
+    fin = fin + tel[9] + tel[10];
+    return fin;
+}
 
 // метод обработки ввода ИСУ
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
+    QString tel = "";
     ui->labelPhoto->setText("");
     ui->visitedEventsList->clear();
     if(ui->ISU->text().size() == 6){
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT fio, photo_url, deposit FROM chlens WHERE isu = " + isu);
+        query.prepare("SELECT fio, photo_url, deposit, phone FROM chlens WHERE isu = " + isu);
 
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
@@ -100,6 +109,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
         else{
             query.first(); // запрос по фио
             ui->Fio->setText(query.value(0).toString());
+            ui->telLable->setText(phoneChange(query.value(3).toString()));
 
             QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);                // запрос по фоточке
             connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getImage(QNetworkReply*)));

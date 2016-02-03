@@ -50,6 +50,8 @@ private slots:
 
     void on_ISU_textChanged(const QString &arg1);
 
+    QString phoneChange(QString tel);
+
     void connectBD();
 
     void getEventList();
