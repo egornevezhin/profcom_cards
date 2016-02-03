@@ -78,6 +78,7 @@ private slots:
 
     void on_outEventListButtion_clicked();
     void on_comboBoxEvents_currentTextChanged(const QString &arg1);
+    void on_Events_currentTextChanged(const QString &arg1);
 };
 
 #endif // PROFKOM_H

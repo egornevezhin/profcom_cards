@@ -41,9 +41,9 @@ void Profkom::getEventList(){
     QVector<QString> name;
     ui->Events->clear();
     ui->finalEventList->clear();
-    query.prepare( "SELECT name FROM events WHERE date>=CURDATE()");
+    query.prepare( "SELECT name FROM events WHERE date>=CURDATE() ORDER BY YEAR(Date) DESC, MONTH(Date) DESC, DAY(DATE) DESC");
     if(!query.exec()){
-        ShowMessage("No find!","EROR");
+        ShowMessage("No find!","ERROR");
     }
     else{
         //        query.first();
@@ -82,6 +82,7 @@ void Profkom::connectBD()
         ShowMessage(db.lastError().text(),"EROR");
 }
 
+// метод формирования номера телефона
 QString Profkom::phoneChange(QString tel){
     QString fin = "+7 (";
     fin = fin + tel[1] + tel[2] + tel[3] + ") ";
@@ -241,7 +242,7 @@ void Profkom::on_tabWidget_tabBarClicked(int index)
         ui->eventDate->setDate(QDate::currentDate());
         QSqlQuery query;
         ui->comboBoxEvents->clear();
-        query.prepare( "SELECT * FROM events");
+        query.prepare( "SELECT * FROM events ORDER BY YEAR(Date) DESC, MONTH(Date) DESC, DAY(DATE) DESC");
         if(!query.exec()){
             ShowMessage("No find!","EROR");
             return;
