@@ -381,6 +381,8 @@ void Profkom::saveListParticipant(QList<Profkom::people> list, int rowc)   //М�
         if(pathFilter.contains("csv")){
             QString csv="ИСУ;ФИО;тел.\n";
             for(int i=0;i<list.size();i++){
+                if(i==rowc)
+                    csv +="\n;РЕЗЕРВ\n";
                 csv += list[i].isu+";"+list[i].fio+";"+list[i].phone;
             }
             QFile csvFile(path);
@@ -395,6 +397,8 @@ void Profkom::saveListParticipant(QList<Profkom::people> list, int rowc)   //М�
             QString html= "<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"ru\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
                           "</head>\n<body>\n<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" border-color=\"red\">\n<tbody>\n<tr>\n<td>\n<p>ИСУ</p>\n</td>\n<td>\n<p>ФИО</p>\n</td>\n<td>\n<p>Телефон</p>\n</td>\n</tr>\n";
             for(int i=0;i<list.size();i++){
+                if(i==rowc)
+                    html +="</tbody>\n</table>\n<p><b>РЕЗЕРВ</b></p>\n<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" border-color=\"red\">\n<tbody>\n";
                 html += "<tr>\n<td>\n<p>"+list[i].isu+"</p>\n</td>"+"<td>\n<p>"+list[i].fio+"</p>\n</td>\n"+"<td>\n<p>"+list[i].phone+"</p>\n</td>\n</tr>\n";
             }
             html += "</tbody>\n</table>\n</body>\n</html>";
