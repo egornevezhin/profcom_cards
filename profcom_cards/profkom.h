@@ -72,7 +72,7 @@ private slots:
 
     void on_openEventFile_clicked();
 
-    void saveListParticipant(QList<people> list);
+    void saveListParticipant(QList<people> list, int rowc);
 
     QByteArray utf8ToWindows1251(QString utf8);
 

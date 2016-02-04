@@ -372,8 +372,9 @@ void Profkom::on_openEventFile_clicked()
     }
 }
 
-void Profkom::saveListParticipant(QList<Profkom::people> list)   //Метод сохранения списка участников мероприятия в указанном формате. Поддерживаются форматы pdf,csv
+void Profkom::saveListParticipant(QList<Profkom::people> list, int rowc)   //Метод сохранения списка участников мероприятия в указанном формате. Поддерживаются форматы pdf,csv
 {
+    // rowc - количество людей в основном списке
     QString pathFilter;
     QString path = QFileDialog::getSaveFileName(this, "Cохранить файл","Список","PDF (*.pdf);;Excel (*.csv)",&pathFilter);
     if(!path.isEmpty()){
@@ -428,22 +429,21 @@ void Profkom::on_outEventListButtion_clicked()
     QSqlQuery query;
     query.exec("SELECT amount FROM events WHERE name = '" + ui->finalEventList->currentText() + "'");
     query.next();
-    int rowc = query.value(0).toInt();
-    rowc += rowc / 2;
+    int rowc = query.value(0).toInt(); // количество людей на мероприятии
     if(ui->eventsTable->rowCount() != 0){
         if((rowc) > ui->eventsTable->rowCount()){
             rowc = ui->eventsTable->rowCount();
         }
         QList<Profkom::people> outEventList;
         Profkom::people out;
-        for (int row = 0 ; row < rowc ; ++row) {
+        for (int row = 0 ; row < rowc + rowc / 2 ; ++row) {
             out.fio = ui->eventsTable->item(row, 1)->text();
             out.phone = ui->eventsTable->item(row, 2)->text();
             out.isu = ui->eventsTable->item(row, 0)->text();
             outEventList.push_back(out);
         }
 
-        saveListParticipant(outEventList);
+        saveListParticipant(outEventList, rowc);
     }
     else{
         ShowMessage("Таблица пуста", "ERROR");
