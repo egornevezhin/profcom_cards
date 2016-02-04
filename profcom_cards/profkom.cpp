@@ -378,9 +378,9 @@ void Profkom::saveListParticipant(QList<Profkom::people> list)   //Метод с
     QString path = QFileDialog::getSaveFileName(this, "Cохранить файл","Список","PDF (*.pdf);;Excel (*.csv)",&pathFilter);
     if(!path.isEmpty()){
         if(pathFilter.contains("csv")){
-            QString csv="ФИО;тел.\n";
+            QString csv="ИСУ;ФИО;тел.\n";
             for(int i=0;i<list.size();i++){
-                csv += list[i].fio+";"+list[i].phone;
+                csv += list[i].isu+";"+list[i].fio+";"+list[i].phone;
             }
             QFile csvFile(path);
             if(!csvFile.open(QIODevice::WriteOnly)){
@@ -392,9 +392,9 @@ void Profkom::saveListParticipant(QList<Profkom::people> list)   //Метод с
         }
         if(pathFilter.contains("pdf")){
             QString html= "<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"ru\">\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n"
-                          "</head>\n<body>\n<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" border-color=\"red\">\n<tbody>\n<tr>\n<td>\n<p>ФИО</p>\n</td>\n</tr>\n";
+                          "</head>\n<body>\n<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" border-color=\"red\">\n<tbody>\n<tr>\n<td>\n<p>ИСУ</p>\n</td>\n<td>\n<p>ФИО</p>\n</td>\n<td>\n<p>Телефон</p>\n</td>\n</tr>\n";
             for(int i=0;i<list.size();i++){
-                html += "<tr>\n<td>\n<p>"+list[i].fio+"</p>\n</td>\n</tr>\n";
+                html += "<tr>\n<td>\n<p>"+list[i].isu+"</p>\n</td>"+"<td>\n<p>"+list[i].fio+"</p>\n</td>\n"+"<td>\n<p>"+list[i].phone+"</p>\n</td>\n</tr>\n";
             }
             html += "</tbody>\n</table>\n</body>\n</html>";
 
@@ -439,6 +439,7 @@ void Profkom::on_outEventListButtion_clicked()
         for (int row = 0 ; row < rowc ; ++row) {
             out.fio = ui->eventsTable->item(row, 1)->text();
             out.phone = ui->eventsTable->item(row, 2)->text();
+            out.isu = ui->eventsTable->item(row, 0)->text();
             outEventList.push_back(out);
         }
 
@@ -454,7 +455,7 @@ void Profkom::on_comboBoxEvents_currentTextChanged(const QString &currEvent)
     QSqlQuery query;
     QVector<QString> ppl;
     ui->eventPeopleTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    query.exec("SELECT fio FROM chlens WHERE isu IN (SELECT isu FROM event_chlens WHERE id_event = (SELECT id_event FROM events WHERE name = '" + currEvent + "'))");
+    query.exec("SELECT fio FROM chlens WHERE isu IN (SELECT isu FROM event_chlens WHERE id_event = (SELECT id_event FROM events WHERE name = '" + currEvent + "')) ORDER BY fio");
     while(query.next()){
         ppl.push_back(query.value(0).toString());
     }
