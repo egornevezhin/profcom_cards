@@ -112,7 +112,11 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             ui->Fio->setText(query.value(0).toString());
             ui->telLable->setText(phoneChange(query.value(3).toString()));
 
-            QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);                // запрос по фоточке
+            QNetworkProxyQuery proxy(QUrl("http://www.vk.com"));    // запрос по фоточке
+            QList<QNetworkProxy> listOfProxy = QNetworkProxyFactory::systemProxyForQuery(proxy);
+            QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);
+            if(listOfProxy.size())
+                networkManager->setProxy(listOfProxy[0]);
             connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getImage(QNetworkReply*)));
             networkManager->get(QNetworkRequest(QUrl("http://94.19.5.51/profcom/photo/"+isu+".png")));
 
