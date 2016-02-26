@@ -315,6 +315,7 @@ void Profkom::on_openEventFile_clicked()
     QSqlQuery query;
     QVector<people> list;
     people chel;
+    QMap<QString, int> unIsu;
     QString str = QFileDialog::getOpenFileName(0, "Выберите файл с мерприятием", "", "*.csv");
     QFile file(str);
     if (!file.open(QIODevice::ReadOnly))
@@ -329,13 +330,24 @@ void Profkom::on_openEventFile_clicked()
         chel.isu = line.split(';')[0];
         // телефон
         chel.phone = line.split(';')[1];
-        query.exec("UPDATE  chlens SET  phone = " + chel.phone + " WHERE  isu = " + chel.isu);
+
+        if(unIsu[chel.isu] == 1){
+            continue;
+        }
+
+        unIsu[chel.isu]++;
+
+
+        query.exec("UPDATE  chlens SET  phone = " + chel.phone.remove(QRegExp("\\D")) + " WHERE  isu = " + chel.isu);
 
         query.exec("SELECT isu, fio, phone,sum(rate) FROM events,chlens WHERE isu = " + chel.isu + " AND id_event in (SELECT id_event FROM event_chlens WHERE isu = " + chel.isu + ")");
 
         // ФИО
         query.first();
         chel.fio = query.value(1).toString();
+        if(chel.fio == ""){
+            continue;
+        }
         // коэффицент
         chel.rate = query.value(3).toString();
         list.push_back(chel);
@@ -387,7 +399,7 @@ void Profkom::saveListParticipant(QList<Profkom::people> list, int rowc)   //М�
             for(int i=0;i<list.size();i++){
                 if(i==rowc)
                     csv +="\n;РЕЗЕРВ\n";
-                csv += list[i].isu+";"+list[i].fio+";"+list[i].phone;
+                csv += list[i].isu+";"+list[i].fio+";"+list[i].phone+"\n";
             }
             QFile csvFile(path);
             if(!csvFile.open(QIODevice::WriteOnly)){
@@ -444,7 +456,7 @@ void Profkom::on_outEventListButtion_clicked()
         }
         QList<Profkom::people> outEventList;
         Profkom::people out;
-        for (int row = 0 ; row < rowc + rowc / 2 ; ++row) {
+        for (int row = 0 ; row < ui->eventsTable->rowCount() ; ++row) {
             out.fio = ui->eventsTable->item(row, 1)->text();
             out.phone = ui->eventsTable->item(row, 2)->text();
             out.isu = ui->eventsTable->item(row, 0)->text();
