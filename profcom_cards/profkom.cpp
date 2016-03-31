@@ -102,7 +102,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT fio, photo_url, deposit, phone FROM chlens WHERE isu = " + isu);
+        query.prepare("SELECT fio, photo_url, deposit, phone, sum(rate) FROM events,chlens WHERE isu = " + isu + " AND id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
 
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
@@ -111,6 +111,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             query.first(); // запрос по фио
             ui->Fio->setText(query.value(0).toString());
             ui->telLable->setText(phoneChange(query.value(3).toString()));
+            ui->rateLable->setText(query.value(4).toString());
 
             QNetworkProxyQuery proxy(QUrl("http://www.vk.com"));    // запрос по фоточке
             QList<QNetworkProxy> listOfProxy = QNetworkProxyFactory::systemProxyForQuery(proxy);

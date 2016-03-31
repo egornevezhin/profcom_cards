@@ -258,6 +258,22 @@
            </widget>
           </item>
           <item>
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="title">
+             <string>Коэффицент</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <item>
+              <widget class="QLabel" name="rateLable">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>

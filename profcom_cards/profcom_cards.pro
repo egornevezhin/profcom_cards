@@ -20,3 +20,5 @@ HEADERS  += profkom.h
 FORMS    += profkom.ui
 
 CONFIG += qsqlmysql
+
+RC_FILE += logo.rc
