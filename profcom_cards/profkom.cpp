@@ -28,6 +28,11 @@ Profkom::Profkom(QWidget *parent) :
 
     getEventList();
 
+    ui->tabWidget->hide();
+
+
+    QPixmap imageLogo("logo_profcom.png");
+    ui->profcomLogoLabel->setPixmap(imageLogo.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 }
 
 Profkom::~Profkom()
@@ -76,9 +81,7 @@ void Profkom::connectBD()
     db.setUserName("profcom");
     db.setPassword("12");
     bool ok = db.open();
-    if(ok)
-        ShowMessage("Connected succesful!","OK");
-    else
+    if(!ok)
         ShowMessage(db.lastError().text(),"EROR");
 }
 
@@ -485,4 +488,65 @@ void Profkom::on_comboBoxEvents_currentTextChanged(const QString &currEvent)
     for(int i=0; i < ppl.size(); i++){
         ui->eventPeopleTable->setItem(i, 0, new QTableWidgetItem(ppl[i]));
     }
+}
+
+void Profkom::on_pushButtonUserIn_clicked()
+{
+    if(ui->lineEditNameUser->text().isEmpty() || ui->lineEditPassworUser->text().isEmpty()){
+        ShowMessage("Не все поля введены","Ошибка");
+        return;
+    }
+    QSqlQuery query;
+    query.exec("SELECT isu,password,type_user FROM `users` WHERE isu = '"+ui->lineEditNameUser->text()+"' AND password = '"+ui->lineEditPassworUser->text()+"'");
+    if(query.size()==0){
+        ShowMessage("Такого пользователя не существует.\nПроверьте ввод логина и пароля","Ошибка");
+        return;
+    }
+    query.first();
+    userAccess(query.value(2).toInt());
+}
+
+void Profkom::userAccess(int userType)
+{
+    switch (userType) {
+    case 0:
+        ui->groupBox->hide();
+        ui->groupBox_2->hide();
+        ui->tabWidget->setTabEnabled(1,0);
+        ui->tabWidget->setTabEnabled(2,0);
+        ui->frame->hide();
+        ui->tabWidget->show();
+        break;
+    case 1:
+        ui->tabWidget->setTabEnabled(1,0);
+        ui->tabWidget->setTabEnabled(2,0);
+        ui->frame->hide();
+        ui->tabWidget->show();
+        break;
+    case 2:
+        ui->frame->hide();
+        ui->tabWidget->show();
+        break;
+    default:
+        ShowMessage("Такого пользователя не существует.\nОбратитесь к администратору","Ошибка");
+        break;
+    }
+}
+
+void Profkom::on_action_2_triggered()
+{
+    exit(0);
+}
+
+void Profkom::on_action_3_triggered()
+{
+    ui->lineEditNameUser->text().clear();
+    ui->lineEditPassworUser->text().clear();
+    ui->groupBox->show();
+    ui->groupBox_2->show();
+    ui->tabWidget->setTabEnabled(1,1);
+    ui->tabWidget->setTabEnabled(2,1);
+    ui->tabWidget->hide();
+    ui->frame->show();
+
 }
