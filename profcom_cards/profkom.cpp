@@ -33,6 +33,10 @@ Profkom::Profkom(QWidget *parent) :
 
     QPixmap imageLogo("logo_profcom.png");
     ui->profcomLogoLabel->setPixmap(imageLogo.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+
+    ui->labelStatusCard->hide();
+    ui->pushButtonStatusCard->hide();
+    ui->groupBox_3->hide();
 }
 
 Profkom::~Profkom()
@@ -76,10 +80,10 @@ void Profkom::ShowMessage(QString messageText, QString Title)
 void Profkom::connectBD()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("94.19.5.51");
+    db.setHostName("178.250.246.120");
     db.setDatabaseName("profcom");
     db.setUserName("profcom");
-    db.setPassword("12");
+    db.setPassword("Z6SCXjct7255HR3d");
     bool ok = db.open();
     if(!ok)
         ShowMessage(db.lastError().text(),"EROR");
@@ -105,7 +109,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT fio, photo_url, deposit, phone FROM chlens WHERE isu = " + isu);
+        query.prepare("SELECT fio, status_card, deposit, phone FROM chlens WHERE isu = " + isu);
 
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
@@ -121,7 +125,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             if(listOfProxy.size())
                 networkManager->setProxy(listOfProxy[0]);
             connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getImage(QNetworkReply*)));
-            networkManager->get(QNetworkRequest(QUrl("http://94.19.5.51/profcom/photo/"+isu+".png")));
+            networkManager->get(QNetworkRequest(QUrl("http://0wx.ru/profcom/reg/savefile/"+isu+".png")));
 
             if(query.value(2).toString() == "1"){    // запрос по профвзносам
                 ui->Deposit->setStyleSheet("QLabel { background-color : white; color : green; }");
@@ -133,6 +137,27 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
                 ui->Deposit->setText("Не оплачены.");
                 ui->buttonPayFees->setEnabled(1);
             }
+            switch (query.value(1).toInt()) {
+            case 0:
+                ui->labelStatusCard->setText("Карта не заказана");
+                ui->labelStatusCard->show();
+                ui->pushButtonStatusCard->hide();
+                ui->groupBox_3->show();
+                break;
+            case 1:
+                ui->labelStatusCard->setText("Карта заказана");
+                ui->labelStatusCard->show();
+                ui->pushButtonStatusCard->show();
+                ui->groupBox_3->show();
+                break;
+            case 2:
+                ui->labelStatusCard->setText("Карта получена");
+                ui->labelStatusCard->show();
+                ui->pushButtonStatusCard->hide();
+                ui->groupBox_3->show();
+                break;
+            }
+
 
             query.exec("SELECT name FROM events WHERE id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
             while(query.next()){
