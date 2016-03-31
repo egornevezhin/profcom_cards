@@ -28,6 +28,15 @@ Profkom::Profkom(QWidget *parent) :
 
     getEventList();
 
+    ui->tabWidget->hide();
+
+
+    QPixmap imageLogo("logo_profcom.png");
+    ui->profcomLogoLabel->setPixmap(imageLogo.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+
+    ui->labelStatusCard->hide();
+    ui->pushButtonStatusCard->hide();
+    ui->groupBox_3->hide();
 }
 
 Profkom::~Profkom()
@@ -71,14 +80,12 @@ void Profkom::ShowMessage(QString messageText, QString Title)
 void Profkom::connectBD()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("94.19.5.51");
+    db.setHostName("178.250.246.120");
     db.setDatabaseName("profcom");
     db.setUserName("profcom");
-    db.setPassword("12");
+    db.setPassword("Z6SCXjct7255HR3d");
     bool ok = db.open();
-    if(ok)
-        ShowMessage("Connected succesful!","OK");
-    else
+    if(!ok)
         ShowMessage(db.lastError().text(),"EROR");
 }
 
@@ -102,7 +109,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT fio, photo_url, deposit, phone, sum(rate) FROM events,chlens WHERE isu = " + isu + " AND id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
+        query.prepare("SELECT fio, status_card, deposit, phone FROM chlens WHERE isu = " + isu);
 
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
@@ -111,7 +118,6 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             query.first(); // запрос по фио
             ui->Fio->setText(query.value(0).toString());
             ui->telLable->setText(phoneChange(query.value(3).toString()));
-            ui->rateLable->setText(query.value(4).toString());
 
             QNetworkProxyQuery proxy(QUrl("http://www.vk.com"));    // запрос по фоточке
             QList<QNetworkProxy> listOfProxy = QNetworkProxyFactory::systemProxyForQuery(proxy);
@@ -119,7 +125,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             if(listOfProxy.size())
                 networkManager->setProxy(listOfProxy[0]);
             connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getImage(QNetworkReply*)));
-            networkManager->get(QNetworkRequest(QUrl("http://94.19.5.51/profcom/photo/"+isu+".png")));
+            networkManager->get(QNetworkRequest(QUrl("http://0wx.ru/profcom/reg/savefile/"+isu+".png")));
 
             if(query.value(2).toString() == "1"){    // запрос по профвзносам
                 ui->Deposit->setStyleSheet("QLabel { background-color : white; color : green; }");
@@ -131,6 +137,27 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
                 ui->Deposit->setText("Не оплачены.");
                 ui->buttonPayFees->setEnabled(1);
             }
+            switch (query.value(1).toInt()) {
+            case 0:
+                ui->labelStatusCard->setText("Карта не заказана");
+                ui->labelStatusCard->show();
+                ui->pushButtonStatusCard->hide();
+                ui->groupBox_3->show();
+                break;
+            case 1:
+                ui->labelStatusCard->setText("Карта заказана");
+                ui->labelStatusCard->show();
+                ui->pushButtonStatusCard->show();
+                ui->groupBox_3->show();
+                break;
+            case 2:
+                ui->labelStatusCard->setText("Карта получена");
+                ui->labelStatusCard->show();
+                ui->pushButtonStatusCard->hide();
+                ui->groupBox_3->show();
+                break;
+            }
+
 
             query.exec("SELECT name FROM events WHERE id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
             while(query.next()){
@@ -485,4 +512,65 @@ void Profkom::on_comboBoxEvents_currentTextChanged(const QString &currEvent)
     for(int i=0; i < ppl.size(); i++){
         ui->eventPeopleTable->setItem(i, 0, new QTableWidgetItem(ppl[i]));
     }
+}
+
+void Profkom::on_pushButtonUserIn_clicked()
+{
+    if(ui->lineEditNameUser->text().isEmpty() || ui->lineEditPassworUser->text().isEmpty()){
+        ShowMessage("Не все поля введены","Ошибка");
+        return;
+    }
+    QSqlQuery query;
+    query.exec("SELECT isu,password,type_user FROM `users` WHERE isu = '"+ui->lineEditNameUser->text()+"' AND password = '"+ui->lineEditPassworUser->text()+"'");
+    if(query.size()==0){
+        ShowMessage("Такого пользователя не существует.\nПроверьте ввод логина и пароля","Ошибка");
+        return;
+    }
+    query.first();
+    userAccess(query.value(2).toInt());
+}
+
+void Profkom::userAccess(int userType)
+{
+    switch (userType) {
+    case 0:
+        ui->groupBox->hide();
+        ui->groupBox_2->hide();
+        ui->tabWidget->setTabEnabled(1,0);
+        ui->tabWidget->setTabEnabled(2,0);
+        ui->frame->hide();
+        ui->tabWidget->show();
+        break;
+    case 1:
+        ui->tabWidget->setTabEnabled(1,0);
+        ui->tabWidget->setTabEnabled(2,0);
+        ui->frame->hide();
+        ui->tabWidget->show();
+        break;
+    case 2:
+        ui->frame->hide();
+        ui->tabWidget->show();
+        break;
+    default:
+        ShowMessage("Такого пользователя не существует.\nОбратитесь к администратору","Ошибка");
+        break;
+    }
+}
+
+void Profkom::on_action_2_triggered()
+{
+    exit(0);
+}
+
+void Profkom::on_action_3_triggered()
+{
+    ui->lineEditNameUser->text().clear();
+    ui->lineEditPassworUser->text().clear();
+    ui->groupBox->show();
+    ui->groupBox_2->show();
+    ui->tabWidget->setTabEnabled(1,1);
+    ui->tabWidget->setTabEnabled(2,1);
+    ui->tabWidget->hide();
+    ui->frame->show();
+
 }
