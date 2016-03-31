@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
+    <width>680</width>
     <height>484</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <string>Profkom</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_9">
+   <layout class="QVBoxLayout" name="verticalLayout_10">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="toolTip">
@@ -251,6 +251,29 @@
               <widget class="QPushButton" name="buttonPayFees">
                <property name="text">
                 <string>Оплатить</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_3">
+            <property name="title">
+             <string>Статус карты</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <widget class="QLabel" name="labelStatusCard">
+               <property name="text">
+                <string>Cars_Status</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButtonStatusCard">
+               <property name="text">
+                <string>Забрал карту</string>
                </property>
               </widget>
              </item>
@@ -625,7 +648,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>715</width>
+     <width>680</width>
      <height>21</height>
     </rect>
    </property>
