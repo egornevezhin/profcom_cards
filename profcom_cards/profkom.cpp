@@ -37,6 +37,7 @@ Profkom::Profkom(QWidget *parent) :
     ui->labelStatusCard->hide();
     ui->pushButtonStatusCard->hide();
     ui->groupBox_3->hide();
+    ui->groupBox_4->hide();
 }
 
 Profkom::~Profkom()
@@ -109,7 +110,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT fio, status_card, deposit, phone FROM chlens WHERE isu = " + isu);
+        query.prepare("SELECT chlens.fio, chlens.status_card, chlens.deposit, chlens.phone, sum(events.rate) FROM events,chlens,event_chlens WHERE chlens.isu ="+isu+" AND event_chlens.isu = 153836 AND event_chlens.id_event = events.id_event");
 
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
@@ -141,25 +142,31 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             case 0:
                 ui->labelStatusCard->setText("Карта не заказана");
                 ui->labelStatusCard->show();
+                ui->groupBox_4->show();
+                ui->labelCoef->setText(query.value(4).toString());
                 ui->pushButtonStatusCard->hide();
                 ui->groupBox_3->show();
                 break;
             case 1:
                 ui->labelStatusCard->setText("Карта заказана");
                 ui->labelStatusCard->show();
+                ui->groupBox_4->show();
+                ui->labelCoef->setText(query.value(4).toString());
                 ui->pushButtonStatusCard->show();
                 ui->groupBox_3->show();
                 break;
             case 2:
                 ui->labelStatusCard->setText("Карта получена");
                 ui->labelStatusCard->show();
+                ui->groupBox_4->show();
+                ui->labelCoef->setText(query.value(4).toString());
                 ui->pushButtonStatusCard->hide();
                 ui->groupBox_3->show();
                 break;
             }
 
 
-            query.exec("SELECT name FROM events WHERE id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
+            query.exec("SELECT events.name FROM events, event_chlens WHERE event_chlens.isu ="+isu+"AND events.id_event=event_chlens.id_event");
             while(query.next()){
                 ui->visitedEventsList->addItem(query.value(0).toString());
             }
