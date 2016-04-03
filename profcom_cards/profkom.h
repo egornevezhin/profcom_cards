@@ -84,6 +84,7 @@ private slots:
     void userAccess(int userType);
     void on_action_2_triggered();
     void on_action_3_triggered();
+    void provideAuthenication(QNetworkReply *reply, QAuthenticator *ator);
 };
 
 #endif // PROFKOM_H

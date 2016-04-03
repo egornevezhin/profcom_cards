@@ -124,8 +124,9 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             QNetworkAccessManager* networkManager = new QNetworkAccessManager(this);
             if(listOfProxy.size())
                 networkManager->setProxy(listOfProxy[0]);
+            connect(networkManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(provideAuthenication(QNetworkReply*,QAuthenticator*)));
             connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(getImage(QNetworkReply*)));
-            networkManager->get(QNetworkRequest(QUrl("http://0wx.ru/profcom/reg/savefile/"+isu+".png")));
+            networkManager->get(QNetworkRequest(QUrl("http://profcom.0wx.ru/reg/savefile/"+isu+".png")));
 
             if(query.value(2).toString() == "1"){    // запрос по профвзносам
                 ui->Deposit->setStyleSheet("QLabel { background-color : white; color : green; }");
@@ -165,7 +166,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
             }
 
 
-            query.exec("SELECT events.name FROM events, event_chlens WHERE event_chlens.isu ="+isu+"AND events.id_event=event_chlens.id_event");
+            query.exec("SELECT name FROM events WHERE id_event in (SELECT id_event FROM event_chlens WHERE isu = " + isu + ")");
             while(query.next()){
                 ui->visitedEventsList->addItem(query.value(0).toString());
             }
@@ -579,4 +580,10 @@ void Profkom::on_action_3_triggered()
     ui->tabWidget->hide();
     ui->frame->show();
 
+}
+
+void Profkom::provideAuthenication(QNetworkReply *reply, QAuthenticator *ator)
+{
+    ator->setUser(QString("eultra"));
+    ator->setPassword(QString("Dr248668"));
 }
