@@ -103,14 +103,13 @@ QString Profkom::phoneChange(QString tel){
 // метод обработки ввода ИСУ
 void Profkom::on_ISU_textChanged(const QString &arg1)
 {
-    QString tel = "";
     ui->labelPhoto->setText("");
     ui->visitedEventsList->clear();
     if(ui->ISU->text().size() == 6){
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT chlens.fio, chlens.status_card, chlens.deposit, chlens.phone, sum(events.rate) FROM events,chlens,event_chlens WHERE chlens.isu ="+isu+" AND event_chlens.isu = 153836 AND event_chlens.id_event = events.id_event");
+        query.prepare("SELECT chlens.fio, chlens.status_card, chlens.deposit, chlens.phone, sum(events.rate) FROM events,chlens,event_chlens WHERE chlens.isu ="+isu+" AND event_chlens.isu = "+isu+"  AND event_chlens.id_event = events.id_event");
 
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
