@@ -10,11 +10,11 @@
     <x>0</x>
     <y>0</y>
     <width>680</width>
-    <height>496</height>
+    <height>548</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Profkom</string>
+   <string>Профком Университета ИТМО</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -103,7 +103,7 @@
                </font>
               </property>
               <property name="text">
-               <string>ФИО</string>
+               <string>[ИСУ]ФИО</string>
               </property>
              </widget>
             </item>

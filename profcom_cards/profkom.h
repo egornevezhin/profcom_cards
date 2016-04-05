@@ -85,6 +85,7 @@ private slots:
     void on_action_2_triggered();
     void on_action_3_triggered();
     void provideAuthenication(QNetworkReply *reply, QAuthenticator *ator);
+    bool validator(QString);
 };
 
 #endif // PROFKOM_H

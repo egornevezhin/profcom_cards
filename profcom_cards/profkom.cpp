@@ -105,18 +105,21 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
 {
     ui->labelPhoto->setText("");
     ui->visitedEventsList->clear();
-    if(ui->ISU->text().size() == 6){
+    if(ui->ISU->text().size() == 6 || validator(ui->ISU->text())){
         isu = arg1;
         QSqlQuery query;
 
-        query.prepare("SELECT chlens.fio, chlens.status_card, chlens.deposit, chlens.phone, sum(events.rate) FROM events,chlens,event_chlens WHERE chlens.isu ="+isu+" AND event_chlens.isu = "+isu+"  AND event_chlens.id_event = events.id_event");
-
+        if(!validator(isu))
+            query.prepare("SELECT chlens.fio, chlens.status_card, chlens.deposit, chlens.phone, sum(events.rate), chlens.isu FROM events,chlens,event_chlens WHERE chlens.isu ="+isu+" AND event_chlens.isu = "+isu+"  AND event_chlens.id_event = events.id_event");
+        else
+            query.prepare("SELECT chlens.fio, chlens.status_card, chlens.deposit, chlens.phone, sum(events.rate), chlens.isu FROM events,chlens,event_chlens WHERE chlens.`fio` LIKE '%"+isu+"%' AND event_chlens.isu = chlens.isu  AND event_chlens.id_event = events.id_event GROUP BY chlens.isu LIMIT 1");
         if(!query.exec()){
             ShowMessage(query.lastError().text(),"ERROR");
         }
         else{
             query.first(); // запрос по фио
-            ui->Fio->setText(query.value(0).toString());
+            isu = query.value(5).toString();
+            ui->Fio->setText("["+isu+"]"+query.value(0).toString());
             ui->telLable->setText(phoneChange(query.value(3).toString()));
 
             QNetworkProxyQuery proxy(QUrl("http://www.vk.com"));    // запрос по фоточке
@@ -173,6 +176,7 @@ void Profkom::on_ISU_textChanged(const QString &arg1)
 
         }
     }
+
 }
 
 
@@ -264,9 +268,9 @@ void Profkom::getImage(QNetworkReply *reply)
     {
         data = reply->readAll();
         image = QImage::fromData(data);
-
+        ui->labelPhoto->setPixmap(QPixmap::fromImage(image).scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
     }else {
-        ShowMessage("Не удалось загрузить изображение.\nВозможно файл отсуствует.","WARNING");
+        image = QPixmap("noimage.png").toImage();
     }
     ui->labelPhoto->setPixmap(QPixmap::fromImage(image).scaled(110,150,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 }
@@ -586,4 +590,13 @@ void Profkom::provideAuthenication(QNetworkReply *reply, QAuthenticator *ator)
 {
     ator->setUser(QString("eultra"));
     ator->setPassword(QString("Dr248668"));
+}
+
+bool Profkom::validator(QString val)
+{
+    QRegExp reg("^[А-ЯЁ][а-яё]*$");
+    if(reg.exactMatch(val))
+        return true;
+    else
+        return false;
 }

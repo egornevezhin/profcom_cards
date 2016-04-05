@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'profkom.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -131,7 +131,7 @@ public:
         if (Profkom->objectName().isEmpty())
             Profkom->setObjectName(QStringLiteral("Profkom"));
         Profkom->setEnabled(true);
-        Profkom->resize(680, 496);
+        Profkom->resize(680, 548);
         action_2 = new QAction(Profkom);
         action_2->setObjectName(QStringLiteral("action_2"));
         action_3 = new QAction(Profkom);
@@ -570,7 +570,7 @@ public:
 
     void retranslateUi(QMainWindow *Profkom)
     {
-        Profkom->setWindowTitle(QApplication::translate("Profkom", "Profkom", 0));
+        Profkom->setWindowTitle(QApplication::translate("Profkom", "\320\237\321\200\320\276\321\204\320\272\320\276\320\274 \320\243\320\275\320\270\320\262\320\265\321\200\321\201\320\270\321\202\320\265\321\202\320\260 \320\230\320\242\320\234\320\236", 0));
         action_2->setText(QApplication::translate("Profkom", "\320\222\321\213\321\205\320\276\320\264", 0));
         action_3->setText(QApplication::translate("Profkom", "\320\222\321\213\320\271\321\202\320\270 \320\270\320\267 \320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\321\202\320\265\320\273\321\217", 0));
 #ifndef QT_NO_TOOLTIP
@@ -578,7 +578,7 @@ public:
 #endif // QT_NO_TOOLTIP
         label_2->setText(QApplication::translate("Profkom", "\320\244\320\276\321\202\320\276", 0));
         labelPhoto->setText(QString());
-        label_3->setText(QApplication::translate("Profkom", "\320\244\320\230\320\236", 0));
+        label_3->setText(QApplication::translate("Profkom", "[\320\230\320\241\320\243]\320\244\320\230\320\236", 0));
         Fio->setText(QString());
         groupBox->setTitle(QApplication::translate("Profkom", "\320\240\320\265\320\263\320\270\321\201\321\202\321\200\320\260\321\206\320\270\321\217", 0));
         label_5->setText(QApplication::translate("Profkom", "\320\227\320\260\321\200\320\265\320\263\320\270\321\201\321\202\321\200\320\270\321\200\320\276\320\262\320\260\321\202\321\214 \320\275\320\260 \320\274\320\265\321\200\320\276\320\277\321\200\320\270\321\217\321\202\320\270\320\265:", 0));
